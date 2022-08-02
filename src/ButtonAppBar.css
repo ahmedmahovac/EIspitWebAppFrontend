@@ -1,0 +1,13 @@
+.btnGroupGeneral{
+    margin: 5px;
+    padding: 5px;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+a:hover {
+     color: black;
+
+}
