@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ButtonGroup, Divider } from '@mui/material';
-import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 import InputIcon from '@mui/icons-material/Input';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -20,10 +20,10 @@ import {
 
 export default function ButtonAppBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1}}>
       <AppBar position="fixed">
         <Toolbar>
-          <FileDownloadDoneIcon fontSize='large'/>
+          <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
           <Link to="/">E-Ispit</Link>
           </Typography>

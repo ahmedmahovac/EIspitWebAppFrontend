@@ -12,19 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import './SignUpPage.css';
+import {Link as LinkRouter} from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -44,7 +33,7 @@ export default function SignUp() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 14,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -65,8 +54,9 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Ime"
                   autoFocus
+                  sx={{padding: "5px"}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -74,9 +64,10 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label="Prezime"
                   name="lastName"
                   autoComplete="family-name"
+                  sx={{padding: "5px"}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -84,9 +75,10 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email adresa"
                   name="email"
                   autoComplete="email"
+                  sx={{padding: "5px"}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -94,16 +86,17 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Lozinka"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  sx={{padding: "5px"}}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Želim da me smarate putem maila."
                 />
               </Grid>
             </Grid>
@@ -113,18 +106,17 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Registracija
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <LinkRouter to="/login" className='helpLinks'>
                   Already have an account? Sign in
-                </Link>
+                </LinkRouter>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

@@ -12,31 +12,36 @@ import {
 } from "react-router-dom";
 import SignIn from './SignInPage';
 import SignUp from './SignUpPage';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 class App extends Component {
 
   render() {
     return (
       <Router>
-          <div>
-                  <ButtonAppBar/>
-                  <Routes>
-                    <Route exact path='/login' element={<SignIn/>}>
-                      
-                    </Route>
-                    <Route exact path='/registration' element={<SignUp/>}>
+        <Container>  
+          <ButtonAppBar/>
+          <Box>
+            <Routes>
+              <Route exact path='/login' element={<SignIn/>}>
+                
+              </Route>
+              <Route exact path='/registration' element={<SignUp/>}>
 
-                    </Route>
-                    <Route exact path='/examAccess'>
+              </Route>
+              <Route exact path='/examAccess'>
 
-                    </Route>
-                    <Route exact path='/contact'>
+              </Route>
+              <Route exact path='/contact'>
 
-                    </Route>
-                    <Route exact path='/' element={<MainPage/>}>
-                    </Route>
-                  </Routes>
-          </div>
+              </Route>
+              <Route exact path='/' element={<MainPage/>}>
+              </Route>
+            </Routes>
+          </Box>
+        </Container>    
       </Router>
     );
   }

@@ -7,10 +7,10 @@ class MainPage extends Component {
 
     render() {
       return (
-            <div>     
+            <box>     
                 <ShortSummarySection/>
                 <AdvantagesSection advantages = {advantages}/> 
-            </div>
+            </box>
       );
     }
   }
