@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import SignIn from './SignInPage';
 import SignUp from './SignUpPage';
+import ExamAccess from './ExamAccess';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -31,7 +32,7 @@ class App extends Component {
               <Route exact path='/registration' element={<SignUp/>}>
 
               </Route>
-              <Route exact path='/examAccess'>
+              <Route exact path='/examAccess' element={<ExamAccess/>}>
 
               </Route>
               <Route exact path='/contact'>
