@@ -27,7 +27,7 @@ export default function ButtonAppBar() {
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
           <Link to="/">E-Ispit</Link>
           </Typography>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem="true"/>
+          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<InputIcon/>} color="inherit">
@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
               Za nastavnike
             </Typography>
           </ButtonGroup>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem="true"/>
+          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' >
               <Button startIcon={<PlayArrowIcon/>} color="inherit">
@@ -52,7 +52,7 @@ export default function ButtonAppBar() {
               Za studente
             </Typography>
           </ButtonGroup>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem="true"/>
+          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
           <Button startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
             <Link to="/contact">Kontakt</Link>

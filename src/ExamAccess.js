@@ -12,25 +12,30 @@ export default function ExamAccess() {
         <Container maxWidth="xs">
             <CssBaseline />
                 <Box sx={{
-                    marginTop: 25,
+                    marginTop: 35,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center"
                 }}>
-                    <Typography variant='h4'>
+                    <Typography variant='h5'>
                         Enter Exam Key
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{
+                        mt: 1, padding: "5px"
+                    }}>
                         <TextField
                         name='examKey'
                         label="Enter exam key"
                         fullWidth
                         required
                         id='examKey'
-                        autofocus
+                        autoFocus
+                        sx={{padding: "5px"}}
                         />
-                    <Button variant='contained' type='submit' fullWidth>
-                        <Link to="/">
+                    <Button variant='contained' type='submit' fullWidth sx={{
+                        mt: 1, mb: 1
+                    }}>
+                        <Link to="#">
                             Start
                         </Link>
                     </Button>
