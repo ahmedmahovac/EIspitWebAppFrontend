@@ -15,6 +15,8 @@ import SignIn from './SignInPage';
 import SignUp from './SignUpPage';
 import ExamAccess from './ExamAccess';
 import ContactPage from './ContactPage';
+import Ispit from './Ispit';
+
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -41,7 +43,11 @@ class App extends Component {
               <Route exact path='/contact' element={<ContactPage/>}>
 
               </Route>
+              <Route exact path='/ispit' element={<Ispit/>}>
+
+              </Route>
               <Route exact path='/' element={<MainPage/>}>
+
               </Route>
             </Routes>
           </Box>

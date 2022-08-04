@@ -1,12 +1,21 @@
 import { Component } from 'react';
 import { Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
 
 export default function ExamAccess() {
 
+    let navigate = useNavigate();
+
     const handleSubmit = (event) => {
-        console.log(event.target);
+        event.preventDefault();
+        console.log(event.currentTarget);
     };
+
+    const handleClick = (event) => {
+        navigate("/ispit");
+    }
 
       return (
         <Container maxWidth="xs">
@@ -20,7 +29,7 @@ export default function ExamAccess() {
                     <Typography variant='h5'>
                         Enter Exam Key
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{
+                    <Box component="form"  noValidate sx={{
                         mt: 1, padding: "5px"
                     }}>
                         <TextField
@@ -32,12 +41,10 @@ export default function ExamAccess() {
                         autoFocus
                         sx={{padding: "5px"}}
                         />
-                    <Button variant='contained' type='submit' fullWidth sx={{
+                    <Button variant='contained' type='submit' onClick={handleClick} fullWidth sx={{
                         mt: 1, mb: 1
                     }}>
-                        <Link to="#">
                             Start
-                        </Link>
                     </Button>
                     </Box>
                 </Box>    

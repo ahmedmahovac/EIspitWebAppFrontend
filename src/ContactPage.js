@@ -1,11 +1,21 @@
 import { Component } from 'react';
 import { Box, Button, Container, CssBaseline, TextField, Typography, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
+import emailjs from '@emailjs/browser';
+import apiKey from './emailkey';
 
 export default function ContactPage() {
 
-    const handleSend = (event) => {
+    const handleSubmit = (event) => {
         console.log(event.currentTarget);
+        event.preventDefault();
+        emailjs.sendForm(apiKey.SERVICE_ID, apiKey.TEMPLATE_ID, event.target, apiKey.USER_ID)
+        .then((result) => {
+        alert("Message Sent, We will get back to you shortly", result.text);
+        },
+        (error) => {
+        alert("An error occurred, Please try again", error.text);
+        });
     };
 
       return (
@@ -20,7 +30,7 @@ export default function ContactPage() {
                     <Typography variant='h5'>
                         Opišite svoj upit ili sugestiju
                     </Typography>
-                    <Box component="form" onSubmit={handleSend} noValidate sx={{
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{
                         mt: 1, padding: "5px", width: "100%"
                     }}>
                         <Grid container spacing={2}>
@@ -60,7 +70,7 @@ export default function ContactPage() {
                             </Grid>
                         </Grid>
                         <TextField
-                        name='messageFromContact'
+                        name='message'
                         label="Poruka"
                         fullWidth
                         required
