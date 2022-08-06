@@ -14,10 +14,28 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from "react-router-dom";
 
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
 const theme = createTheme();
 
 
 export default function SignIn() {
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email('Invalid email address').required('Email is required'),
+      password: Yup.string().required("Password is required").min(6, "Password too short! Must be at least 6 characters.")
+    }),
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -46,15 +64,18 @@ export default function SignIn() {
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              required
               fullWidth
               id="email"
               label="Email adresa"
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
               sx={{padding: "5px"}}
             />
+            {formik.touched.email && formik.errors.email ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.email}</Typography>) : null}
             <TextField
               margin="normal"
               required
@@ -64,8 +85,12 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={formik.handleChange}
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
               sx={{padding: "5px"}}
             />
+            {formik.touched.password && formik.errors.password ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.password}</Typography>) : null}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Zapamti me"

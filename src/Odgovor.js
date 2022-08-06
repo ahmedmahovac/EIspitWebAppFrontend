@@ -6,7 +6,7 @@ export default function Odgovor() {
     return(
         <Box>
             <Typography variant='subtitle1' sx={{
-                color: "#1976d2"
+                color: "#22c1c3"
             }}>
                 Prostor za odgovor:
             </Typography>

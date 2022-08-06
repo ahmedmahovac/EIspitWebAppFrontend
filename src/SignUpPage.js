@@ -15,9 +15,35 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './SignUpPage.css';
 import {Link as LinkRouter} from 'react-router-dom';
 
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+
 const theme = createTheme();
 
 export default function SignUp() {
+
+  
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
+      lastName: Yup.string().max(20, 'Must be 20 characters or less').required('Required'),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
+      password: Yup.string().required("Password is required").min(6, "Password too short! Must be at least 6 characters.")
+    }),
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -51,47 +77,55 @@ export default function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  required
                   fullWidth
                   id="firstName"
                   label="Ime"
                   autoFocus
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   sx={{padding: "5px"}}
                 />
+                {formik.touched.firstName && formik.errors.firstName ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.firstName}</Typography>) : null}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
                   id="lastName"
                   label="Prezime"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   sx={{padding: "5px"}}
                 />
+                {formik.touched.lastName && formik.errors.lastName ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.lastName}</Typography>) : null}
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   id="email"
                   label="Email adresa"
                   name="email"
                   autoComplete="email"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   sx={{padding: "5px"}}
                 />
+                {formik.touched.email && formik.errors.email ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.email}</Typography>) : null}
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   name="password"
                   label="Lozinka"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   sx={{padding: "5px"}}
                 />
+                {formik.touched.password && formik.errors.password ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.password}</Typography>) : null}
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
