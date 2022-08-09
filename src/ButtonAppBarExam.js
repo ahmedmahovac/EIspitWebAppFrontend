@@ -8,58 +8,61 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ButtonGroup, Divider } from '@mui/material';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import InputIcon from '@mui/icons-material/Input';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import CallIcon from '@mui/icons-material/Call';
+import PublishIcon from '@mui/icons-material/Publish';
+import CloseIcon from '@mui/icons-material/Close';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import Countdown from 'react-countdown';
 import './ButtonAppBar.css';
 import {
-  Link
+  Link, Outlet
 } from "react-router-dom";
+
+
+
+const Completionist = () => <div>Time is up</div>;
+
+
+
 
 
 export default function ButtonAppBar() {
   return (
     <Box sx={{ flexGrow: 1}}>
-      <AppBar position="fixed">
+      <AppBar position="fixed"> 
         <Toolbar>
           <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          <Link to="/">E-Ispit</Link>
+            E-Ispit
           </Typography>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' size='large'>
-              <Button startIcon={<InputIcon/>} color="inherit">
-                <Link to="/login">Prijava</Link>
+                <AccessTimeFilledIcon fontSize='small'/>
+                <Countdown date={Date.now() + 10000*3600}>
+                    <Completionist/>
+                </Countdown>
+            </ButtonGroup>  
+            <Typography variant="subtitle2" align='center' >
+              Preostalo vrijeme
+            </Typography>
+          </ButtonGroup>
+          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
+          <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+            <ButtonGroup variant='text' size='large'>
+              <Button startIcon={<CloseIcon/>} color="inherit">
+                <Link to="/">Izađi</Link>
               </Button>
-              <Button startIcon={<HowToRegIcon/>} color="inherit">
-              <Link to="/registration">Registracija</Link>
+              <Button startIcon={<PublishIcon/>} color="inherit">
+              <Link to="/">Predaj</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >
-              Za nastavnike
+              Opcije
             </Typography>
-          </ButtonGroup>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <ButtonGroup variant='text' >
-              <Button startIcon={<PlayArrowIcon/>} color="inherit">
-                <Link to="/examAccess">Pristup Ispitu</Link>
-              </Button>
-            </ButtonGroup>
-            <Typography variant="subtitle2" align='center'>
-              Za studente
-            </Typography>
-          </ButtonGroup>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-          <Button startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-            <Link to="/contact">Kontakt</Link>
-          </Button>
           </ButtonGroup>
         </Toolbar>
       </AppBar>
+      <Outlet/>
     </Box>
   );
 }

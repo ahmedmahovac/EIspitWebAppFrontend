@@ -14,7 +14,7 @@ export default function ExamAccess() {
     };
 
     const handleClick = (event) => {
-        navigate("/ispit");
+        navigate("../examAccessEnterPersonalInfo");
     }
 
       return (
@@ -44,7 +44,7 @@ export default function ExamAccess() {
                     <Button variant='contained' type='submit' onClick={handleClick} fullWidth sx={{
                         mt: 1, mb: 1
                     }}>
-                            Start
+                            NEXT
                     </Button>
                     </Box>
                 </Box>    
