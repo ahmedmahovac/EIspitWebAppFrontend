@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Zoom from 'react-medium-image-zoom';
-import './Odgovor.css';
+import './UploadImageFromMobilePage.css';
 
 const UploadImageFromMobilePage = () => {
     const [selectedImages, setSelectedImages] = useState([]);
@@ -23,7 +23,7 @@ const UploadImageFromMobilePage = () => {
   
     return (
       <section>
-        <label>
+        <label className='uploadImageLabel'>
           + Add Images
           <br />
           <span>up to 10 images</span>

@@ -49,7 +49,6 @@ export default function SignIn() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <Box sx={{
-            marginTop: 15,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

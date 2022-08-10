@@ -12,7 +12,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import CloseIcon from '@mui/icons-material/Close';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Countdown from 'react-countdown';
-import './ButtonAppBar.css';
+import './ButtonAppBar.module.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -28,7 +28,7 @@ const Completionist = () => <div>Time is up</div>;
 export default function ButtonAppBar() {
   return (
     <Box sx={{ flexGrow: 1}}>
-      <AppBar position="fixed"> 
+      <AppBar position="sticky"> 
         <Toolbar>
           <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>

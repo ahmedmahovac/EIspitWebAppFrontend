@@ -16,13 +16,15 @@ import SignUp from './SignUpPage';
 import ExamAccess from './ExamAccess';
 import ContactPage from './ContactPage';
 import Ispit from './Ispit';
+import ExamsList from './ExamsList';
 import UploadImageFromMobilePage from './UploadImageFromMobilePage';
 import ButtonAppBarExam from './ButtonAppBarExam';
 import EnterPersonalInfoExam from './EnterPersonalInfoExam';
-
+import ButtonAppBarTeacher from './ButtonAppBarTeacher';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+
 
 class App extends Component {
 
@@ -31,7 +33,7 @@ class App extends Component {
       <Router>
           <Box>
             <Routes>
-              <Route exact path='/' element={<ButtonAppBarHome/>}>
+              <Route exact path='' element={<ButtonAppBarHome/>}>
                 <Route exact path='login' element={<SignIn/>}>
                   
                 </Route>
@@ -58,6 +60,9 @@ class App extends Component {
                 <Route exact path='' element={<Ispit/>}>
                   
                 </Route>
+              </Route>
+              <Route exact path='teacher' element={<ButtonAppBarTeacher/>}>
+                <Route exact path='exams' element={<ExamsList/>}></Route>
               </Route>
               <Route path='*' element={
                 <div>

@@ -21,7 +21,7 @@ export default function ExamAccess() {
         <Container maxWidth="xs">
             <CssBaseline />
                 <Box sx={{
-                    marginTop: 35,
+                    marginTop: 30,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center"

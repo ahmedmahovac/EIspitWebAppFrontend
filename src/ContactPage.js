@@ -22,7 +22,7 @@ export default function ContactPage() {
         <Container maxWidth="md">
             <CssBaseline />
                 <Box sx={{
-                    marginTop: 35,
+                    marginTop: 30,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center"

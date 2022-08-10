@@ -12,7 +12,7 @@ import InputIcon from '@mui/icons-material/Input';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CallIcon from '@mui/icons-material/Call';
-import './ButtonAppBar.css';
+import './ButtonAppBar.module.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -21,7 +21,7 @@ import {
 export default function ButtonAppBar() {
   return (
     <Box sx={{ flexGrow: 1}}>
-      <AppBar position="fixed">
+      <AppBar position="sticky">
         <Toolbar>
           <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>

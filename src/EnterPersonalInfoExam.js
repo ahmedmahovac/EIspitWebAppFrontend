@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import './SignUpPage.css';
+import './SignUpPage.module.css';
 import {Link as LinkRouter} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -66,7 +66,6 @@ export default function EnterPersonalInfoExam() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 14,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
