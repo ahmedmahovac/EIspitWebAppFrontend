@@ -1,130 +1,164 @@
-import { Box, Button, Container, Typography } from "@mui/material";
-import {Datatable} from "@o2xp/react-datatable";
-import React, { Component, useState } from "react";
-import {
-    FreeBreakfast as CoffeeIcon,
-    CallSplit as CallSplitIcon
-  } from "@material-ui/icons";
+import { Box, Button, ButtonGroup, Container, Typography } from "@mui/material";
+import React, { Component, useState, useEffect } from "react";
 
-  import EditIcon from '@mui/icons-material/Edit';
-  import Switch from "react-switch";
 
-const handleOpenExamChange = (event) => {
+import {makeStyles} from "@mui/styles";
 
-}
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
+
+import Switch from "react-switch";
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import TablePagination from '@mui/material/TablePagination';
+
+import SearchBar from "material-ui-search-bar";
+
+const useStyles = makeStyles({
+    headerRow: {
+        backgroundColor: "#1976d2"
+    },
+    basicRow: {
+        backgroundColor:"#96ccff"
+    },
+    startIcon: {
+        margin: 0
+      }
+});
+
+
 
 
 export default function ExamsList() {
 
-        const [questions, setQuestions] = useState([{
-            examTitle: "Ispit 1",
-            createdTime: "12.6.2000",
+        const classes = useStyles();
+
+
+        // objedini sve stateove u jedan objekat!!
+
+        const [examsInTotal, setExamsInTotal] = useState(4);
+
+        const [exams, setExams] = useState([{
+            id: 1,
+            examTitle: "Ispit 1", // i po ovome sortirati ima smisla
+            createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
             examKey: "xdaswdD1",
             open: false
         },
         {
+            id: 2,
             examTitle: "Ispit 2",
-            createdTime: "12.6.2000",
+            createdTime: new Date("2020-05-12T23:50:21.817Z"),
             examKey: "xdaswdD2",
-            open: true
+            open: false
         },
         {
+            id: 3,
             examTitle: "Ispit 3",
-            createdTime: "12.6.2000",
+            createdTime: new Date("2020-05-12T23:50:21.817Z"),
             examKey: "xdaswdD3",
-            open: false
+            open: true
         }]);
 
+        const [searchBarValue, setSearchBarValue] = useState(""); 
+        const [searchedExams, setsearchedExams] = useState(exams);
 
-        let options  = {
-            keyColumn: 'examTitle',
-            dimensions: {
-                datatable: {
-                    width: "90%",
-                    height: "40%"
-                },
-                row: {
-                  height: "60px"
+        const [orderDirectionCreatedTime, setOrderDirectionCreatedTime] = useState("asc");
+        const [orderDirectionTitle, setOrderDirectionTitle] = useState("asc");
+
+
+        useEffect(()=>{
+            onSearchBarChange(searchBarValue);
+        }, [exams]);
+
+        const sortArray = (id, arr, orderBy) => {
+            switch (orderBy) {
+              case "asc":
+              default:
+                return arr.sort((a, b) => {
+                    if(id=="cellCreatedTime") {
+                        return a.createdTime > b.createdTime ? 1 : b.createdTime > a.createdTime ? -1 : 0
+                    }
+                    else if(id=="cellTitle") {
+                        return a.examTitle > b.examTitle ? 1 : b.examTitle > a.examTitle ? -1 : 0
+                    }
                 }
-              },
-            data: {
-                columns: [ 
-                    {
-                        id: "examTitle",
-                        label: "Exam title",
-                        colSize: "150px"
-                    },
-                    {
-                        id: "createdTime",
-                        label: "Created",
-                        colSize: "50px",
-                        editable: false,
-                        dataType: "dateTime",
-                        dateFormatIn: "YYYY-MM-DDTHH:mm",
-                        dateFormatOut: "YYYY-MM-DDTHH:mm",
-                    },
-                    {
-                        id: "examKey",
-                        label: "Exam key",
-                        colSize: "80px"
-                    },
-                    {
-                        id: "open",
-                        label: "Open",
-                        colSize: "50px",
-                        editable: false,
-                        dataType: "boolean",
-                        inputType: "checkbox"
-                    }
-                ],
-                rows: questions
-            },
-            title : "Exam list",
-            features: {
-                canDelete: true,
-                canSearch: true,
-                canFilter: true,
-                canSelectRow: true,
-                isUpdatingRows: true,
-                additionalIcons: [
-                    {
-                      title: "Coffee",
-                      icon: <CoffeeIcon color="primary" />,
-                      onClick: () => alert("Coffee Time!")
-                    }
-                  ],
-                  selectionIcons: [
-                    {
-                      title: "Selected Rows",
-                      icon: <CallSplitIcon color="primary" />,
-                      onClick: rows => console.log(rows)
-                    }
-                  ]
+                );
+              case "desc":
+                return arr.sort((a, b) => {
+                    if(id=="cellCreatedTime")
+                    return a.createdTime < b.createdTime ? 1 : b.createdTime < a.createdTime ? -1 : 0
+                    else if(id=="cellTitle")
+                    return a.examTitle < b.examTitle ? 1 : b.examTitle < a.examTitle ? -1 : 0
+                }
+                );
             }
+          };
+
+
+        const handleSortRequest = (event) => {
+            let id = event.currentTarget.id;
+            switch(id){
+                case "cellCreatedTime": 
+                default:
+                setExams(sortArray(id, exams, orderDirectionCreatedTime));
+                setOrderDirectionCreatedTime(orderDirectionCreatedTime === "asc" ? "desc" : "asc");
+                case "cellTitle":
+                setExams(sortArray(id, exams, orderDirectionTitle));
+                setOrderDirectionTitle(orderDirectionTitle === "asc" ? "desc" : "asc");
+            }
+        };
+
+
+        const handleSwitchChange = (value, event, id) => {
+           let updatedQuestions = exams.map((item)=>{
+                                if(item.id == id) {
+                                    return {...item, open: value}
+                                }
+                                else return item
+                            });
+            setExams(updatedQuestions);
         }
 
-    
+// promijenit id-ove ovih ikona, jer vec takve postoje
+        const onClickHandlerDelete = (event) => {
+            let id = event.currentTarget.id;
+            let updatedQuestions = exams.filter((item)=>{
+                return item.id != id;
+            });   
+            setExams(updatedQuestions);
 
-       const buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
-          let val;
-          switch (column.dataType) {
-            case "boolean":
-              val =  
-              <div style={{textAlign: "center"}}>
-                <Switch
-                checked={cellVal}
-                onColor="#86d3ff"
-                onHandleColor="#2693e6"
-                onChange={handleOpenExamChange}
-                />
-              </div>
-              break;
-            default:
-              val = <div style={{ color: "blue" }}>{cellVal}</div>;
-              break;
-          }
-          return val;
         }
+
+
+        const onClickHandlerEdit = (event) => {
+
+        }
+
+
+        const onSearchBarChange = (value) => {
+            setSearchBarValue(value);
+            let filteredQuestions = exams.filter(item =>{
+                return item.examTitle.toLowerCase().includes(value.toLowerCase());
+            });
+            setsearchedExams(filteredQuestions);
+        }
+
+
+        const onCancelSearch = () => {
+            setSearchBarValue("");
+            setsearchedExams(exams);
+        }
+
+
         return(
                 <Container sx={{
                     width: "100%", 
@@ -135,23 +169,68 @@ export default function ExamsList() {
                         marginBottom: 15,
                         padding: 2
                     }}>
-                        <Datatable options={options} CustomTableBodyCell={buildCustomTableBodyCell}></Datatable>
-                        <Button textAlign="center" variant="contained" onClick={(event)=>{
-                            setQuestions((prevQuestions)=>{
-                                console.log("prosla pitanja: ");
-                                prevQuestions.map((item)=>console.log(item.examTitle));
+                        <TableContainer component={Paper}>
+                            <SearchBar
+                                onChange={onSearchBarChange}
+                                value={searchBarValue}
+                                placeholder="Search by title"
+                                onCancelSearch={onCancelSearch}
+                            />
+                            <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow className={classes.headerRow}>
+                                <TableCell></TableCell>
+                                <TableCell id="cellTitle" align="right" onClick={handleSortRequest}>
+                                    <TableSortLabel active direction={orderDirectionTitle}>
+                                        Title
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell id="cellCreatedTime" align="right" onClick={handleSortRequest}>
+                                    <TableSortLabel active direction={orderDirectionCreatedTime}>
+                                        Created time
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell align="right">Exam key</TableCell>
+                                <TableCell align="right">Open</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {searchedExams.map((row) => ( // inace se ne bi ispravno prikazivalo , ne bi se osvjezilo searcQ nakon dodavanja ispita
+                                <TableRow key={row.id} className={classes.basicRow}>
+                                    <TableCell align="left">
+                                        <ButtonGroup variant="" size="large">
+                                            <Button id={row.id} startIcon={<EditIcon/>} onClick={onClickHandlerEdit}></Button>
+                                            <Button id={row.id} startIcon={<DeleteIcon/>} onClick={onClickHandlerDelete}></Button>
+                                        </ButtonGroup>
+                                    </TableCell>
+                                    <TableCell align="right">{row.examTitle}</TableCell>
+                                    <TableCell align="right">{row.createdTime.toLocaleDateString()}</TableCell>
+                                    <TableCell align="right">{row.examKey}</TableCell>
+                                    <TableCell align="right">{
+                                    <Switch offColor={"#ff355e"} onColor={"#22c1c3"} id={""+ row.id} checked={row.open} onChange={handleSwitchChange}/>
+                                    }</TableCell>
+                                </TableRow>
+                                ))}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Button variant="contained" onClick={(event)=>{
+                            setExams((prevQuestions)=>{
                                 return [...prevQuestions, {
-                                    examTitle: "Ispit " + (prevQuestions.length + 1),
-                                    createdTime: "12.6.2000",
+                                    id: prevQuestions.length+1,
+                                    examTitle: "Ispit " + (prevQuestions.length+1),
+                                    createdTime: new Date("2022-05-12T23:50:21.817Z"),
                                     examKey: "xdaswdD3",
                                     open: false
                                 }];
-                            });
+                            })
                         }}>
-                            Add exam    
+                            Add new exam    
                         </Button>
-                        {questions.map(item => <div>{item.examTitle}</div>)}
                     </Box>
                 </Container>
         ); 
 }
+// postavi da id novog ispita bude unikatan !!
+
+// ne radi switchbtn dobro jer on uredjuje samo originalne ispite
