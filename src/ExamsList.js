@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Container, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip } from "@mui/material";
 import React, { Component, useState, useEffect } from "react";
 
 
@@ -21,6 +21,8 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from '@mui/material/TablePagination';
 
 import SearchBar from "material-ui-search-bar";
+import {Link} from 'react-router-dom';
+
 
 const useStyles = makeStyles({
     headerRow: {
@@ -165,6 +167,10 @@ export default function ExamsList() {
                     height: "100%"
                 }}>
                     <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
                         marginTop: 15,
                         marginBottom: 15,
                         padding: 2
@@ -198,9 +204,17 @@ export default function ExamsList() {
                                 {searchedExams.map((row) => ( // inace se ne bi ispravno prikazivalo , ne bi se osvjezilo searcQ nakon dodavanja ispita
                                 <TableRow key={row.id} className={classes.basicRow}>
                                     <TableCell align="left">
-                                        <ButtonGroup variant="" size="large">
-                                            <Button id={row.id} startIcon={<EditIcon/>} onClick={onClickHandlerEdit}></Button>
-                                            <Button id={row.id} startIcon={<DeleteIcon/>} onClick={onClickHandlerDelete}></Button>
+                                        <ButtonGroup variant="">
+                                            <Tooltip title="Edit">
+                                                <IconButton id={row.id} onClick={onClickHandlerEdit} >
+                                                    <EditIcon fontSize="large"/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Delete">
+                                                <IconButton id={row.id} onClick={onClickHandlerDelete} >
+                                                    <DeleteIcon color="primary" fontSize="large"/>
+                                                </IconButton>
+                                            </Tooltip>
                                         </ButtonGroup>
                                     </TableCell>
                                     <TableCell align="right">{row.examTitle}</TableCell>
@@ -224,8 +238,12 @@ export default function ExamsList() {
                                     open: false
                                 }];
                             })
+                        }} sx={{
+                            marginTop: 2,
+                            justifySelf: "center",
+                            backgroundColor: "#22c1c3"
                         }}>
-                            Add new exam    
+                            <Link to="../newExam">Add new exam</Link> 
                         </Button>
                     </Box>
                 </Container>

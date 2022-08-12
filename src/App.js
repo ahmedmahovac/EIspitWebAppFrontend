@@ -18,6 +18,8 @@ import ContactPage from './ContactPage';
 import Ispit from './Ispit';
 import ExamsList from './ExamsList';
 import UploadImageFromMobilePage from './UploadImageFromMobilePage';
+import NewExam from './NewExam.js';
+
 import ButtonAppBarExam from './ButtonAppBarExam';
 import EnterPersonalInfoExam from './EnterPersonalInfoExam';
 import ButtonAppBarTeacher from './ButtonAppBarTeacher';
@@ -63,6 +65,7 @@ class App extends Component {
               </Route>
               <Route exact path='teacher' element={<ButtonAppBarTeacher/>}>
                 <Route exact path='exams' element={<ExamsList/>}></Route>
+                <Route exact path='newExam' element={<NewExam/>}></Route>
               </Route>
               <Route path='*' element={
                 <div>
