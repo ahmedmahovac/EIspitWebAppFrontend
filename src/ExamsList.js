@@ -89,6 +89,7 @@ export default function ExamsList() {
                     }
                 }
                 );
+              break; 
               case "desc":
                 return arr.sort((a, b) => {
                     if(id=="cellCreatedTime")
@@ -108,14 +109,6 @@ export default function ExamsList() {
             onSearchBarChange(searchBarValue);
         }, [exams]);
 
-        useEffect(()=>{
-            console.log("promijenjen orderDirectionCreatedTime");
-        }, [orderDirectionCreatedTime]);
-
-
-        useEffect(()=>{
-            console.log("promijenjen orderDirectionTitle");
-        }, [orderDirectionTitle]);
 
         const handleSortRequest = (event) => {
             let id = event.currentTarget.id;
