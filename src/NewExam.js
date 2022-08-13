@@ -1,12 +1,12 @@
-import { Component, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { Box, Container, Typography, Tooltip, Button, IconButton, TextField, Paper, FormControlLabel, Checkbox, FormGroup, FormControl, FormLabel, FormHelperText, TextareaAutosize, Input} from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import AddIcon from '@mui/icons-material/Add';
-import CancelIcon from '@mui/icons-material/Cancel';
+import CloseIcon from '@mui/icons-material/Close';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
 import UploadImages from './UploadImages';
-
+import PitanjePreview from './PitanjePreview';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -21,7 +21,11 @@ export default function NewExam() {
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
-    const [numberOfAddedQuestions, setNumberOfAddedQuestions] = useState(0);
+
+    const [questions, setQuestions] = useState([]);
+    const  [questionTitle, setQuestionTitle] = useState("");
+    const  [questionText, setQuestionText] = useState("");
+
     const [addingQuestionActive, setAddingQuestionActive] = useState(false);
 
     const [checkboxState, setCheckBoxState] = useState({
@@ -38,6 +42,10 @@ export default function NewExam() {
 
     }
 
+    const onChangeQuestionTitle = (event) => {
+        setQuestionTitle(event.currentTarget.value);
+    }
+
     const handleCancelAddingQuestion = (event) => {
         setAddingQuestionActive(false);
     }
@@ -49,6 +57,23 @@ export default function NewExam() {
             [event.target.name] : event.target.checked
         });
     }
+
+    const handleQuestionTextChange = (event) => {
+        setQuestionText(event.currentTarget.value);
+    }
+
+    const handleQuestionAdded = (event) => {
+        setQuestions([...questions, {title: questionTitle, questionText: questionText, pdfIncluded: (pdfFile!=null ? true : false), imagesIncluded: checkboxState.checkboxImages}]);
+        // ovo sve skupa moze u neku fju koja se npr zove resetuj unesene podatke za dodavanje pitanja
+        setAddingQuestionActive(false);
+        setCheckBoxState({checkboxText: false, checkboxImages: false,checkboxPdf: false});
+        setPdfFile(null);
+        setErrorPdfFile("");
+        setQuestionText("");
+        setQuestionTitle("");
+    }
+
+
 
     const onFileSelected = (event) => {
         const selectedFile = event.target.files[0];
@@ -64,6 +89,11 @@ export default function NewExam() {
             setErrorPdfFile("Please select PDF file only.");
         }
     }
+
+
+    useEffect(()=>{
+        questions.map((item)=>{console.log(item)});
+    }, [questions]);
 
     return(
         <Container component="main" maxWidth="xl">
@@ -140,17 +170,17 @@ export default function NewExam() {
                         {addingQuestionActive ? 
                         <Tooltip title="Cancel adding question">
                         <Button onClick={handleCancelAddingQuestion} variant='contained' sx={{
-                            backgroundColor: "#22c1c3",
+                            backgroundColor: "#ff355e",
                             marginTop: 1,
                             marginBottom: 1,
                             marginLeft: 1
                         }}>
-                            <CancelIcon/>
+                            <CloseIcon/>
                         </Button>
                     </Tooltip>
                     : null}
                         <Typography variant='h6' sx={{marginLeft: "auto", marginRight: 1}}>
-                            {numberOfAddedQuestions} questions added
+                            {questions.length} questions added
                         </Typography>
                     </Paper>
                     {addingQuestionActive ? 
@@ -161,7 +191,7 @@ export default function NewExam() {
                             justifyContent: "center",
                             alignItems: "left"
                             }}> 
-                            <TextField  required label="question title" fullWidth sx={{padding: "5px" , marginTop: 1}}></TextField>
+                            <TextField onChange={onChangeQuestionTitle} value={questionTitle} required label="question title" fullWidth sx={{padding: "5px" , marginTop: 1}}></TextField>
                             <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
                                 <FormLabel>Assign what you want to include in this question</FormLabel>
                                 <FormGroup>
@@ -187,29 +217,66 @@ export default function NewExam() {
                                 <FormHelperText>Check at least one</FormHelperText>
                             </FormControl>
                             {checkboxState.checkboxText ? 
-                            <TextField multiline rows={6} required label="Enter question text" fullWidth sx={{padding: "5px" , marginTop: 1}}></TextField>
+                            <Paper elevation={2} sx={{m: 1}}>
+                                <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>Descripe a formulation of the question precisely.</Typography>
+                                <TextField onChange={handleQuestionTextChange} value={questionText} multiline rows={6} required label="Enter question text" fullWidth sx={{padding: "5px" , marginTop: 1}}></TextField>
+                            </Paper>
                             : null}
                             {checkboxState.checkboxImages&&(
-                                <UploadImages/>
+                                <Paper elevation={2} sx={{m: 1}}>
+                                    <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>Upload images as formulation of question.</Typography>
+                                    <UploadImages/>
+                                </Paper>
                             )}
                             {checkboxState.checkboxPdf ? 
-                            <Box sx={{m: 1}}>
-                            <Typography variant='h6' sx={{fontWeight: "bold"}}> Upload pdf</Typography>
+
+                            <Paper elevation={2} sx={{m: 1}}>
+                            <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}> Upload pdf</Typography>
                             <Input type='file' onChange={onFileSelected}></Input>
                             <Typography color="error">{errorPdfFile}</Typography>
-                            <Typography variant='h6' sx={{fontWeight: "bold"}}>View pdf</Typography>
+                            <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>View pdf</Typography>
                             {pdfFile&&(
                                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js">
                                     <Viewer plugins={[defaultLayoutPluginInstance]} fileUrl={pdfFile} />;
                                 </Worker>
                             )}
                             {!pdfFile&&(
-                                <Typography variant='subtitle1'>No pdf file selected</Typography>
+                                <Typography variant='subtitle1' sx={{color: "#ff355e"}}>No pdf file selected</Typography>
                             )}
-                            </Box>
+                            </Paper>
                             : null}
-                        </Paper> : null }
+                            <Button onClick={handleQuestionAdded} startIcon={<AddIcon/>} variant='contained' sx={{backgroundColor: "#22c1c3", m: 1}}>
+                                Add question
+                            </Button>
+                        </Paper>
+                        : null }
                 </Box> 
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+
+                }}>
+                    {questions.length && questions.map((item)=>{
+                        return(
+                            <PitanjePreview {...item}/>
+                        );
+                    })}
+                </Box>
+                <Paper sx={{
+                    padding: "2",
+                    width: "100%",
+                    m: 3,
+                    height: "100px",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <Button size='large' variant='contained' sx={{backgroundColor: "#22c1c3"}}>ADD EXAM</Button>
+                </Paper>
             </Box>
         </Container>
     );
