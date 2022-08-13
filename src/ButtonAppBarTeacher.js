@@ -12,7 +12,7 @@ import CallIcon from '@mui/icons-material/Call';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import './ButtonAppBar.module.css';
+import './ButtonAppBar.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -25,29 +25,29 @@ export default function ButtonAppBar() {
         <Toolbar>
           <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          <Link to="/home">E-Ispit</Link>
+          <Link className='ButtonAppBarLink' to="/home">E-Ispit</Link>
           </Typography>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup>
             <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <Button startIcon={<FormatListBulletedIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link to="exams">Exam list</Link>
+                <Link className='ButtonAppBarLink' to="../teacher/exams">Exams list</Link>
             </Button>
             </ButtonGroup>
             <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <Button startIcon={<AccountBoxIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link to="/">Profile</Link>
+                <Link className='ButtonAppBarLink' to="/">Profile</Link>
             </Button>
             </ButtonGroup>
             <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <Button startIcon={<LogoutIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link to="/">Log out</Link>
+                <Link className='ButtonAppBarLink' to="/">Log out</Link>
             </Button>
             </ButtonGroup>
             <Divider className='dividerGeneral' orientation="vertical" flexItem/>
             <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <Button startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link to="/contact">Contact</Link>
+            <Button className='ButtonAppBarLink' startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
+                <Link className='ButtonAppBarLink' to="/contact">Contact</Link>
             </Button>
             </ButtonGroup>
           </ButtonGroup>

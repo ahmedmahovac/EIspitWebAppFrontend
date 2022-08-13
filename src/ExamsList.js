@@ -31,9 +31,7 @@ const useStyles = makeStyles({
     basicRow: {
         backgroundColor:"#96ccff"
     },
-    startIcon: {
-        margin: 0
-      }
+
 });
 
 
@@ -46,7 +44,7 @@ export default function ExamsList() {
 
         // objedini sve stateove u jedan objekat!!
 
-        const [examsInTotal, setExamsInTotal] = useState(4);
+       
 
         const [exams, setExams] = useState([{
             id: 1,
@@ -77,9 +75,6 @@ export default function ExamsList() {
         const [orderDirectionTitle, setOrderDirectionTitle] = useState("asc");
 
 
-        useEffect(()=>{
-            onSearchBarChange(searchBarValue);
-        }, [exams]);
 
         const sortArray = (id, arr, orderBy) => {
             switch (orderBy) {
@@ -106,6 +101,22 @@ export default function ExamsList() {
           };
 
 
+
+          
+        useEffect(()=>{
+            console.log("promijenjeni exams");
+            onSearchBarChange(searchBarValue);
+        }, [exams]);
+
+        useEffect(()=>{
+            console.log("promijenjen orderDirectionCreatedTime");
+        }, [orderDirectionCreatedTime]);
+
+
+        useEffect(()=>{
+            console.log("promijenjen orderDirectionTitle");
+        }, [orderDirectionTitle]);
+
         const handleSortRequest = (event) => {
             let id = event.currentTarget.id;
             switch(id){
@@ -113,7 +124,8 @@ export default function ExamsList() {
                 default:
                 setExams(sortArray(id, exams, orderDirectionCreatedTime));
                 setOrderDirectionCreatedTime(orderDirectionCreatedTime === "asc" ? "desc" : "asc");
-                case "cellTitle":
+                break;
+                case "cellTitle": 
                 setExams(sortArray(id, exams, orderDirectionTitle));
                 setOrderDirectionTitle(orderDirectionTitle === "asc" ? "desc" : "asc");
             }
@@ -243,12 +255,10 @@ export default function ExamsList() {
                             justifySelf: "center",
                             backgroundColor: "#22c1c3"
                         }}>
-                            <Link to="../newExam">Add new exam</Link> 
+                            <Link className="ButtonAppBarLink" to="../newExam">Add new exam</Link> 
                         </Button>
                     </Box>
                 </Container>
         ); 
 }
 // postavi da id novog ispita bude unikatan !!
-
-// ne radi switchbtn dobro jer on uredjuje samo originalne ispite

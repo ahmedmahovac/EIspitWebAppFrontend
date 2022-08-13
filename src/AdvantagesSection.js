@@ -1,5 +1,4 @@
 import Advantagecard from './Advantagecard';
-import './AdvantageSection.module.css';
 import HorizontalScroll from './HorizontalScroll';
 
 const AdvantagesSection = ({advantages}) => {

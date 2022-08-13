@@ -12,7 +12,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import CloseIcon from '@mui/icons-material/Close';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Countdown from 'react-countdown';
-import './ButtonAppBar.module.css';
+import './ButtonAppBar.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -50,10 +50,10 @@ export default function ButtonAppBar() {
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<CloseIcon/>} color="inherit">
-                <Link to="/">Izađi</Link>
+                <Link className='ButtonAppBarLink' to="/">Izađi</Link>
               </Button>
               <Button startIcon={<PublishIcon/>} color="inherit">
-              <Link to="/">Predaj</Link>
+              <Link className='ButtonAppBarLink' to="/">Predaj</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >

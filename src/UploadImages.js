@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Zoom from 'react-medium-image-zoom';
-import './UploadImageFromMobilePage.css';
+import './UploadImages.css';
 
 const UploadImageFromMobilePage = () => {
     const [selectedImages, setSelectedImages] = useState([]);

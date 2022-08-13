@@ -17,7 +17,7 @@ import ExamAccess from './ExamAccess';
 import ContactPage from './ContactPage';
 import Ispit from './Ispit';
 import ExamsList from './ExamsList';
-import UploadImageFromMobilePage from './UploadImageFromMobilePage';
+import UploadImages from './UploadImages';
 import NewExam from './NewExam.js';
 
 import ButtonAppBarExam from './ButtonAppBarExam';
@@ -51,7 +51,7 @@ class App extends Component {
                 <Route exact path='contact' element={<ContactPage/>}>
 
                 </Route>
-                <Route exact path='uploadImage' element={<UploadImageFromMobilePage/>}>
+                <Route exact path='uploadImage' element={<UploadImages/>}>
 
                 </Route>
                 <Route exact path='home' element={<MainPage/>}>

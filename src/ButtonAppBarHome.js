@@ -12,7 +12,7 @@ import InputIcon from '@mui/icons-material/Input';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CallIcon from '@mui/icons-material/Call';
-import './ButtonAppBar.module.css';
+import './ButtonAppBar.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -25,16 +25,16 @@ export default function ButtonAppBar() {
         <Toolbar>
           <DoneAllIcon fontSize='large'/>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          <Link to="/home">E-Ispit</Link>
+          <Link className='ButtonAppBarLink' to="/home">E-Ispit</Link>
           </Typography>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<InputIcon/>} color="inherit">
-                <Link to="/login">Prijava</Link>
+                <Link className='ButtonAppBarLink' to="/login">Prijava</Link>
               </Button>
               <Button startIcon={<HowToRegIcon/>} color="inherit">
-              <Link to="/registration">Registracija</Link>
+              <Link className='ButtonAppBarLink' to="/registration">Registracija</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >
@@ -45,7 +45,7 @@ export default function ButtonAppBar() {
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
             <ButtonGroup variant='text' >
               <Button startIcon={<PlayArrowIcon/>} color="inherit">
-                <Link to="/examAccess">Pristup Ispitu</Link>
+                <Link className='ButtonAppBarLink' to="/examAccess">Pristup Ispitu</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center'>
@@ -55,7 +55,7 @@ export default function ButtonAppBar() {
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
           <Button startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-            <Link to="/contact">Kontakt</Link>
+            <Link className='ButtonAppBarLink' to="/contact">Kontakt</Link>
           </Button>
           </ButtonGroup>
         </Toolbar>

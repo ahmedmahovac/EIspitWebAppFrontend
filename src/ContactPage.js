@@ -83,7 +83,7 @@ export default function ContactPage() {
                         <Button variant='contained' type='submit' fullWidth sx={{
                             mt: 1, mb: 1
                         }}>
-                        <Link to="/">
+                        <Link className='ButtonAppBarLink' to="/">
                             Pošalji
                         </Link>
                     </Button>

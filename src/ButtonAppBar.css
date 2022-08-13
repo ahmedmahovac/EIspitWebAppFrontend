@@ -3,10 +3,10 @@
     padding: 5px;
 }
 
-a{
+.ButtonAppBarLink{
     color: white;
     text-decoration: none;
 }
-a:hover {
+.ButtonAppBarLink:hover {
      color: black;
 }
