@@ -1,5 +1,5 @@
 import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip } from "@mui/material";
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, useContext } from "react";
 
 
 import {makeStyles} from "@mui/styles";
@@ -23,6 +23,7 @@ import TablePagination from '@mui/material/TablePagination';
 import SearchBar from "material-ui-search-bar";
 import {Link} from 'react-router-dom';
 
+import { TeacherContext } from "./ButtonAppBarTeacher";
 
 const useStyles = makeStyles({
     headerRow: {
@@ -39,12 +40,15 @@ const useStyles = makeStyles({
 
 export default function ExamsList() {
 
+
+
+
         const classes = useStyles();
 
 
         // objedini sve stateove u jedan objekat!!
 
-       
+       /*
 
         const [exams, setExams] = useState([{
             id: 1,
@@ -67,6 +71,9 @@ export default function ExamsList() {
             examKey: "xdaswdD3",
             open: true
         }]);
+        */
+
+        const {exams, setExams} = useContext(TeacherContext);
 
         const [searchBarValue, setSearchBarValue] = useState(""); 
         const [searchedExams, setsearchedExams] = useState(exams);
@@ -105,7 +112,7 @@ export default function ExamsList() {
 
           
         useEffect(()=>{
-            console.log("promijenjeni exams");
+            exams.map((item)=>{console.log({...item})});
             onSearchBarChange(searchBarValue);
         }, [exams]);
 
@@ -233,17 +240,7 @@ export default function ExamsList() {
                             </TableBody>
                             </Table>
                         </TableContainer>
-                        <Button variant="contained" onClick={(event)=>{
-                            setExams((prevQuestions)=>{
-                                return [...prevQuestions, {
-                                    id: prevQuestions.length+1,
-                                    examTitle: "Ispit " + (prevQuestions.length+1),
-                                    createdTime: new Date("2022-05-12T23:50:21.817Z"),
-                                    examKey: "xdaswdD3",
-                                    open: false
-                                }];
-                            })
-                        }} sx={{
+                        <Button variant="contained" sx={{
                             marginTop: 2,
                             justifySelf: "center",
                             backgroundColor: "#22c1c3"

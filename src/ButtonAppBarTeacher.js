@@ -16,44 +16,75 @@ import './ButtonAppBar.css';
 import {
   Link, Outlet
 } from "react-router-dom";
+import { createContext } from 'react';
+import { useState } from 'react';
+
+
+
+export const TeacherContext = createContext();
 
 
 export default function ButtonAppBar() {
+
+  const [exams, setExams] = useState([{
+    id: 1,
+    examTitle: "Ispit 1", // i po ovome sortirati ima smisla
+    createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
+    examKey: "xdaswdD1",
+    open: false
+},
+{
+    id: 2,
+    examTitle: "Ispit 2",
+    createdTime: new Date("2020-05-12T23:50:21.817Z"),
+    examKey: "xdaswdD2",
+    open: false
+},
+{
+    id: 3,
+    examTitle: "Ispit 3",
+    createdTime: new Date("2020-05-12T23:50:21.817Z"),
+    examKey: "xdaswdD3",
+    open: true
+}]);
+
   return (
-    <Box sx={{ flexGrow: 1}}>
-      <AppBar position="sticky">
-        <Toolbar>
-          <DoneAllIcon fontSize='large'/>
-          <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          <Link className='ButtonAppBarLink' to="/home">E-Ispit</Link>
-          </Typography>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup>
-            <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <Button startIcon={<FormatListBulletedIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link className='ButtonAppBarLink' to="../teacher/exams">Exams list</Link>
-            </Button>
-            </ButtonGroup>
-            <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <Button startIcon={<AccountBoxIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link className='ButtonAppBarLink' to="/">Profile</Link>
-            </Button>
-            </ButtonGroup>
-            <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <Button startIcon={<LogoutIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link className='ButtonAppBarLink' to="/">Log out</Link>
-            </Button>
-            </ButtonGroup>
+    <TeacherContext.Provider value={{exams, setExams}}>
+      <Box sx={{ flexGrow: 1}}>
+        <AppBar position="sticky">
+          <Toolbar>
+            <DoneAllIcon fontSize='large'/>
+            <Typography variant="h4" sx={{ flexGrow: 1 }}>
+            <Link className='ButtonAppBarLink' to="/home">E-Ispit</Link>
+            </Typography>
             <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-            <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-            <Button className='ButtonAppBarLink' startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                <Link className='ButtonAppBarLink' to="/contact">Contact</Link>
-            </Button>
+            <ButtonGroup>
+              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+              <Button startIcon={<FormatListBulletedIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
+                  <Link className='ButtonAppBarLink' to="../teacher/exams">Exams list</Link>
+              </Button>
+              </ButtonGroup>
+              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+              <Button startIcon={<AccountBoxIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
+                  <Link className='ButtonAppBarLink' to="/">Profile</Link>
+              </Button>
+              </ButtonGroup>
+              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+              <Button startIcon={<LogoutIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
+                  <Link className='ButtonAppBarLink' to="/">Log out</Link>
+              </Button>
+              </ButtonGroup>
+              <Divider className='dividerGeneral' orientation="vertical" flexItem/>
+              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+              <Button className='ButtonAppBarLink' startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
+                  <Link className='ButtonAppBarLink' to="/contact">Contact</Link>
+              </Button>
+              </ButtonGroup>
             </ButtonGroup>
-          </ButtonGroup>
-        </Toolbar>
-      </AppBar>
-      <Outlet/>
-    </Box>
+          </Toolbar>
+        </AppBar>
+        <Outlet/>
+      </Box>
+    </TeacherContext.Provider>
   );
 }
