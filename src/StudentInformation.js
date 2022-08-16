@@ -1,4 +1,4 @@
-import { Box, IconButton, ImageList, ImageListItem, Paper, Typography } from '@mui/material';
+import { Box, IconButton, ImageList, ImageListItem, Paper, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ExamContext } from './Exam';
@@ -6,88 +6,135 @@ import Annotation from 'react-image-annotation';
 import {Collapse} from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import UndoIcon from '@mui/icons-material/Undo';
+import HelpIcon from '@mui/icons-material/Help';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function StudentInformation() {
 
     const {students, selectedIndex} = useContext(ExamContext);
     const [open, setOpen] = useState(false);
     const itemData = [
-        {
-          img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-          title: 'Breakfast',
-        },
-        /*
-        {
-          img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-          title: 'Burger',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-          title: 'Camera',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-          title: 'Coffee',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-          title: 'Hats',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-          title: 'Honey',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-          title: 'Basketball',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-          title: 'Fern',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-          title: 'Mushrooms',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-          title: 'Tomato basil',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-          title: 'Sea star',
-        },
-        {
-          img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-          title: 'Bike',
-        },
-        */
-      ];
+      {
+        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+        title: 'Breakfast',
+        rows: 2,
+        cols: 2,
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+        title: 'Burger',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+        title: 'Camera',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+        title: 'Coffee',
+        cols: 2,
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+        title: 'Hats',
+        cols: 2,
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+        title: 'Honey',
+        author: '@arwinneil',
+        rows: 2,
+        cols: 2,
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+        title: 'Basketball',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
+        title: 'Fern',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
+        title: 'Mushrooms',
+        rows: 2,
+        cols: 2,
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
+        title: 'Tomato basil',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        title: 'Sea star',
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+        title: 'Bike',
+        cols: 2,
+      },
+    ];
 
-      const [annotation, setAnnotation] = useState({});
-      const [annotations, setAnnotations] = useState([]);
+      const [annotation, setAnnotation] = useState(itemData.map((item,index)=>{return {};}));
+      const [annotations, setAnnotations] = useState(itemData.map((item,index)=>{return [];}));
     
+
+      const [disableAnnotations, setDisableAnnotations] = useState(itemData.map(()=>true));
+
       const [clickedImage, setClickedImage] = useState(null);
 
-      const onChange = (annotation) => {
-        console.log(annotation.selection);
-        setAnnotation(annotation);
+      const onChange = (ann) => {
+        setAnnotation(annotation.map((item,index)=>{
+          if(index===clickedImage) return ann;
+          else return item;
+        }));
       }
     
-      const onSubmit = (annotation) => {
-        const { geometry, data } = annotation
-
-        setAnnotation([]);
-        setAnnotations(annotations.concat({
-            geometry,
-            data: {
-              ...data,
-              id: Math.random()
-            }
-          }));
+      const handleUndo = (event) => {
+        setAnnotations(annotations.map((item,index)=>{
+          if(index===clickedImage) return annotations[clickedImage].slice(0,-1);
+          else return item;
+        }));
       }
 
-      useEffect(()=>{console.log(clickedImage)}, [clickedImage]);
+      const onSubmit = (ann) => {
+        const { geometry, data } = ann
+        console.log(data)
+        setAnnotation(annotation.map((item,index)=>{return {};}));
+        setAnnotations(annotations.map((item,index)=>{
+          if(index===clickedImage) {
+           return item.concat({
+              geometry,
+              data: {
+                ...data,
+                id: Math.random()
+              }
+            })
+          }
+          else return item;
+          }))
+      }
+
+
+      useEffect(()=>{
+
+      }, [clickedImage]);
+
+      useEffect(()=>{
+        console.log("promijenjen annotations niz");
+        annotation.map((item)=>{
+          console.log(item.length);
+        })  
+      }, [annotations]);
+
+
+      useEffect(()=>{
+        console.log("promijenjen annotation niz");
+        annotation.map((item)=>{
+          console.log(item);
+        })       
+      }, [annotation]);
 
     return(
         <Box>
@@ -118,16 +165,52 @@ export default function StudentInformation() {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <ImageList sx={{ width: "100%"}} cols={1}>
                     {itemData.map((item,index) => (
-                            <ImageListItem key={item.img} onClick={(event)=>{setClickedImage(index)}}>
+                            <ImageListItem key={item.img}>
                             <Annotation
                                 src={item.img}
                                 alt={item.title}
-                                annotations={annotations}
-                                value={annotation}
+                                annotations={annotations[index]}
+                                value={annotation[index]}
                                 onChange={onChange}
                                 onSubmit={onSubmit}
                                 allowTouch
+                                disableAnnotation={clickedImage!==index}
                             />
+                            <Paper sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "right",
+                              alignItems: "center"
+                            }}>
+                              <Tooltip title="Delete previously added annotation">
+                                <IconButton disabled={clickedImage!==index} size='large' onClick={handleUndo}>
+                                  <UndoIcon/>
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Add annotations to this image">
+                              <IconButton disabled={clickedImage===index} onClick={(event)=>{
+                              setClickedImage(index);
+                              setDisableAnnotations(disableAnnotations.map((item,i)=>{
+                                if(index===i) return false;
+                                else return true;
+                              }));
+                              }}>
+                                    <AddIcon />
+                              </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Close adding annotation">
+                                <IconButton disabled={clickedImage!==index} onClick={(event)=>{
+                                setClickedImage(null);
+                                setDisableAnnotations(disableAnnotations.map((item,i)=>{
+                                  return true;
+                                }));
+                                setAnnotation(annotation.map((item,index)=>{return {};}));
+                                }}>
+                                      <CloseIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Paper>
+                            
                             </ImageListItem>
                     ))} 
                 </ImageList>
