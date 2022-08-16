@@ -16,6 +16,8 @@ import {Link} from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import styles from './SignUpPage.module.css';
+
 const theme = createTheme();
 
 
@@ -102,12 +104,12 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/" className='helpLinks'>
+                <Link to="/" className={styles.helpLinks}>
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item> 
-                <Link to="/registration" className='helpLinks'>
+                <Link to="/registration" className={styles.helpLinks}>
                   Don't have an account? Sign Up
                 </Link>
               </Grid>

@@ -12,7 +12,7 @@ import CallIcon from '@mui/icons-material/Call';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import './ButtonAppBar.css';
+import styles from './ButtonAppBar.module.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -43,7 +43,7 @@ export default function ButtonAppBar() {
 {
     id: 3,
     examTitle: "Ispit 3",
-    createdTime: new Date("2020-05-12T23:50:21.817Z"),
+    createdTime: new Date("2018-05-12T23:50:21.817Z"),
     examKey: "xdaswdD3",
     open: true
 }]);
@@ -55,29 +55,29 @@ export default function ButtonAppBar() {
           <Toolbar>
             <DoneAllIcon fontSize='large'/>
             <Typography variant="h4" sx={{ flexGrow: 1 }}>
-            <Link className='ButtonAppBarLink' to="/home">E-Ispit</Link>
+            <Link className={styles.ButtonAppBarLink} to="/home">E-Ispit</Link>
             </Typography>
             <Divider className='dividerGeneral' orientation="vertical" flexItem/>
             <ButtonGroup>
-              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-              <Button startIcon={<FormatListBulletedIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                  <Link className='ButtonAppBarLink' to="../teacher/exams">Exams list</Link>
+              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+              <Button startIcon={<FormatListBulletedIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                  <Link className={styles.ButtonAppBarLink} to="../teacher/exams">Exams list</Link>
               </Button>
               </ButtonGroup>
-              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-              <Button startIcon={<AccountBoxIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                  <Link className='ButtonAppBarLink' to="/">Profile</Link>
+              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+              <Button startIcon={<AccountBoxIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                  <Link className={styles.ButtonAppBarLink} to="/">Profile</Link>
               </Button>
               </ButtonGroup>
-              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-              <Button startIcon={<LogoutIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                  <Link className='ButtonAppBarLink' to="/">Log out</Link>
+              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+              <Button startIcon={<LogoutIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                  <Link className={styles.ButtonAppBarLink} to="/">Log out</Link>
               </Button>
               </ButtonGroup>
               <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-              <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
-              <Button className='ButtonAppBarLink' startIcon={<CallIcon/>} color="inherit" className='btnGroupGeneral' variant='text'>
-                  <Link className='ButtonAppBarLink' to="/contact">Contact</Link>
+              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+              <Button className={styles.ButtonAppBarLink} startIcon={<CallIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                  <Link className={styles.ButtonAppBarLink} to="/contact">Contact</Link>
               </Button>
               </ButtonGroup>
             </ButtonGroup>

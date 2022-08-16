@@ -1,6 +1,5 @@
 import './App.css';
 import { Component } from 'react';
-import Navbar from './Navbar';
 import ButtonAppBarHome from './ButtonAppBarHome';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import MainPage from './MainPage';
@@ -19,6 +18,8 @@ import Ispit from './Ispit';
 import ExamsList from './ExamsList';
 import UploadImages from './UploadImages';
 import NewExam from './NewExam.js';
+import Exam from './Exam';
+
 
 import ButtonAppBarExam from './ButtonAppBarExam';
 import EnterPersonalInfoExam from './EnterPersonalInfoExam';
@@ -64,7 +65,9 @@ class App extends Component {
                 </Route>
               </Route>
               <Route exact path='teacher' element={<ButtonAppBarTeacher/>}>
-                <Route exact path='exams' element={<ExamsList/>}></Route>
+                <Route exact path='exams/exam' element={<Exam/>}></Route>
+                <Route exact path='exams' element={<ExamsList/>}>
+                </Route>
                 <Route exact path='newExam' element={<NewExam/>}></Route>
               </Route>
               <Route path='*' element={

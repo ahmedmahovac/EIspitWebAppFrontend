@@ -1,10 +1,13 @@
 import { Component } from 'react';
 import { Box, Button, Container, CssBaseline, TextField, Typography, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import apiKey from './emailkey';
+import styles from './ButtonAppBar.module.css';
 
 export default function ContactPage() {
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         console.log(event.currentTarget);
@@ -12,6 +15,7 @@ export default function ContactPage() {
         emailjs.sendForm(apiKey.SERVICE_ID, apiKey.TEMPLATE_ID, event.target, apiKey.USER_ID)
         .then((result) => {
         alert("Message Sent, We will get back to you shortly", result.text);
+        navigate("/");
         },
         (error) => {
         alert("An error occurred, Please try again", error.text);
@@ -83,9 +87,7 @@ export default function ContactPage() {
                         <Button variant='contained' type='submit' fullWidth sx={{
                             mt: 1, mb: 1
                         }}>
-                        <Link className='ButtonAppBarLink' to="/">
                             Pošalji
-                        </Link>
                     </Button>
                     </Box>
                 </Box>    

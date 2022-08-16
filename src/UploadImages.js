@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Zoom from 'react-medium-image-zoom';
-import './UploadImages.css';
+import styles from './UploadImages.module.css';
+
 
 const UploadImageFromMobilePage = () => {
     const [selectedImages, setSelectedImages] = useState([]);
@@ -23,12 +24,12 @@ const UploadImageFromMobilePage = () => {
   
     return (
       <section>
-        <label className='uploadImageLabel'>
+        <label className={styles.uploadImageLabel}>
           + Add Images
           <br />
           <span>up to 10 images</span>
           <input
-            className='inputOdgovor'
+            className={styles.inputOdgovor}
             type="file"
             name="images"
             onChange={onSelectFile}
@@ -38,11 +39,11 @@ const UploadImageFromMobilePage = () => {
         </label>
         <br />
   
-        <input className='inputOdgovor' type="file" multiple />
+        <input className={styles.inputOdgovor} type="file" multiple />
   
         {selectedImages.length > 0 &&
           (selectedImages.length > 10 ? (
-            <p className="error">
+            <p className={styles.error}>
               You can't upload more than 10 images! <br />
               <span>
                 please delete <b> {selectedImages.length - 10} </b> of them{" "}
@@ -50,11 +51,11 @@ const UploadImageFromMobilePage = () => {
             </p>
           ) : (null))}
   
-        <div className="images">
+        <div className={styles.images}>
           {selectedImages &&
             selectedImages.map((image, index) => {
               return (
-                <div key={image} className="image">
+                <div key={image} className={styles.image}>
                   <Zoom>
                      <img src={image} height="200" alt="upload" />
                   </Zoom>

@@ -9,12 +9,14 @@ import UploadImages from './UploadImages';
 import PitanjePreview from './PitanjePreview';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
+
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 
 // Import styles
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { TeacherContext } from './ButtonAppBarTeacher';
+import { useNavigate } from 'react-router-dom';
 
 export default function NewExam() {
 
@@ -22,12 +24,14 @@ export default function NewExam() {
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+    let navigate = useNavigate();
 
     const [questions, setQuestions] = useState([]);
     const  [questionTitle, setQuestionTitle] = useState("");
     const  [questionText, setQuestionText] = useState("");
 
     const [addingQuestionActive, setAddingQuestionActive] = useState(false);
+    const [addingTeacherActive, setAddingTeacherActive] = useState(false);
 
     const [checkboxState, setCheckBoxState] = useState({
         checkboxText: false,
@@ -41,6 +45,15 @@ export default function NewExam() {
     const handleAddQuestion = (event) => {
         setAddingQuestionActive(true);
 
+    }
+
+
+    const handleAddTeacher = (event) => {
+        setAddingTeacherActive(true);
+    }
+
+    const handleCancelAddingTeacher = (event) => {
+        setAddingTeacherActive(false);
     }
 
     const [examTitle, setExamTitle] = useState("");
@@ -95,22 +108,23 @@ export default function NewExam() {
 
     const handleAddExam = (event) => {
         setExams([...exams, {
-            id: 1,
+            id: Math.random(),
             examTitle: examTitle, // i po ovome sortirati ima smisla
             createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
             examKey: "noviIspit",
             open: false
         }]);
+        navigate("../exams");
     }
 
     const handleExamTitle = (event) => {
-        console.log(examTitle);
         setExamTitle(event.currentTarget.value);
     }
 
     useEffect(()=>{
         questions.map((item)=>{console.log(item)});
     }, [questions]);
+
 
     return(
             <Container component="main" maxWidth="xl">
@@ -282,6 +296,65 @@ export default function NewExam() {
                             );
                         })}
                     </Box>
+                    <Box sx={{
+                        padding: "2",
+                        width: "100%",
+                        m: 3
+                    }}>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "#96ccff"
+                        }}>
+                            <Typography variant='h4'>
+                                Add responsible persons
+                            </Typography>
+                            <Tooltip title="Add people who can view and correct students' answers, be able to interact with them during exam time etc " placement='right' arrow>
+                                <IconButton sx={{marginLeft: "auto"}}>
+                                    <HelpIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                        <Paper sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "left",
+                                alignItems: "center"
+                        }}>
+                            <Tooltip title="Add teacher">
+                                <Button disabled={addingTeacherActive} onClick={handleAddTeacher} variant='contained' sx={{
+                                    backgroundColor: "#22c1c3",
+                                    marginTop: 1,
+                                    marginBottom: 1,
+                                    marginLeft: 1
+                                }}>
+                                    <AddIcon/>
+                                </Button>
+                            </Tooltip>
+                            {addingTeacherActive ? 
+                            <Tooltip title="Cancel adding teacher">
+                            <Button onClick={handleCancelAddingTeacher} variant='contained' sx={{
+                                backgroundColor: "#ff355e",
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }}>
+                                <CloseIcon/>
+                            </Button>
+                        </Tooltip>
+                        : null}
+                            <Typography variant='h6' sx={{marginLeft: "auto", marginRight: 1}}>
+                                {questions.length} teachers added
+                            </Typography>
+                        </Paper>
+                        {addingTeacherActive && (
+                      <Paper elevation={2} sx={{marginTop: 1}}>
+                        <TextField sx={{m: 1}} id="outlined-search" label="Search teacher" type="search" />
+                      </Paper>
+                        )}
+                    </Box>  
                     <Paper sx={{
                         padding: "2",
                         width: "100%",

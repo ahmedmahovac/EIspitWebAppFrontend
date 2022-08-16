@@ -12,7 +12,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import CloseIcon from '@mui/icons-material/Close';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Countdown from 'react-countdown';
-import './ButtonAppBar.css';
+import styles from './ButtonAppBar.module.css';
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -35,7 +35,7 @@ export default function ButtonAppBar() {
             E-Ispit
           </Typography>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+          <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>
                 <AccessTimeFilledIcon fontSize='small'/>
                 <Countdown date={Date.now() + 10000*3600}>
@@ -47,13 +47,13 @@ export default function ButtonAppBar() {
             </Typography>
           </ButtonGroup>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup orientation='vertical' className='btnGroupGeneral'>
+          <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<CloseIcon/>} color="inherit">
-                <Link className='ButtonAppBarLink' to="/">Izađi</Link>
+                <Link className={styles.ButtonAppBarLink} to="/">Izađi</Link>
               </Button>
               <Button startIcon={<PublishIcon/>} color="inherit">
-              <Link className='ButtonAppBarLink' to="/">Predaj</Link>
+              <Link className={styles.ButtonAppBarLink} to="/">Predaj</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >

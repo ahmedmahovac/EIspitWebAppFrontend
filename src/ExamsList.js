@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip, Paper, TextField } from "@mui/material";
 import React, { Component, useState, useEffect, useContext } from "react";
 
 
@@ -7,6 +7,7 @@ import {makeStyles} from "@mui/styles";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import Switch from "react-switch";
 
@@ -16,14 +17,16 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from '@mui/material/TablePagination';
 
-import SearchBar from "material-ui-search-bar";
-import {Link} from 'react-router-dom';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
 
 import { TeacherContext } from "./ButtonAppBarTeacher";
+import SearchBar from "material-ui-search-bar";
+import CloseIcon from '@mui/icons-material/Close';
+import Close from "@mui/icons-material/Close";
+
 
 const useStyles = makeStyles({
     headerRow: {
@@ -73,6 +76,8 @@ export default function ExamsList() {
         }]);
         */
 
+        const navigate = useNavigate();
+
         const {exams, setExams} = useContext(TeacherContext);
 
         const [searchBarValue, setSearchBarValue] = useState(""); 
@@ -87,7 +92,7 @@ export default function ExamsList() {
             switch (orderBy) {
               case "asc":
               default:
-                return arr.sort((a, b) => {
+                arr = arr.sort((a, b) => {
                     if(id=="cellCreatedTime") {
                         return a.createdTime > b.createdTime ? 1 : b.createdTime > a.createdTime ? -1 : 0
                     }
@@ -98,7 +103,7 @@ export default function ExamsList() {
                 );
               break; 
               case "desc":
-                return arr.sort((a, b) => {
+                arr = arr.sort((a, b) => {
                     if(id=="cellCreatedTime")
                     return a.createdTime < b.createdTime ? 1 : b.createdTime < a.createdTime ? -1 : 0
                     else if(id=="cellTitle")
@@ -106,13 +111,13 @@ export default function ExamsList() {
                 }
                 );
             }
+            return arr;
           };
 
 
 
           
         useEffect(()=>{
-            exams.map((item)=>{console.log({...item})});
             onSearchBarChange(searchBarValue);
         }, [exams]);
 
@@ -122,11 +127,11 @@ export default function ExamsList() {
             switch(id){
                 case "cellCreatedTime": 
                 default:
-                setExams(sortArray(id, exams, orderDirectionCreatedTime));
+                setExams([].concat(sortArray(id, exams, orderDirectionCreatedTime)));
                 setOrderDirectionCreatedTime(orderDirectionCreatedTime === "asc" ? "desc" : "asc");
                 break;
                 case "cellTitle": 
-                setExams(sortArray(id, exams, orderDirectionTitle));
+                setExams([].concat(sortArray(id, exams, orderDirectionTitle)));
                 setOrderDirectionTitle(orderDirectionTitle === "asc" ? "desc" : "asc");
             }
         };
@@ -157,6 +162,15 @@ export default function ExamsList() {
 
         }
 
+        const onClickHandlerViewResults = (event) => {
+            navigate("../exams/exam");
+        }
+
+
+
+        const handleSearchBarChange = (event) => {
+            onSearchBarChange(event.target.value);
+        }
 
         const onSearchBarChange = (value) => {
             setSearchBarValue(value);
@@ -188,13 +202,25 @@ export default function ExamsList() {
                         padding: 2
                     }}>
                         <TableContainer component={Paper}>
-                            <SearchBar
-                                onChange={onSearchBarChange}
-                                value={searchBarValue}
-                                placeholder="Search by title"
-                                onCancelSearch={onCancelSearch}
-                            />
-                            <Table aria-label="simple table">
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "right",
+                                alignItems: "center"
+                            }}>
+                                <TextField fullWidth label="Search by title" onChange={handleSearchBarChange} value={searchBarValue} sx={{padding: "5px", margin: "5px"}}/>
+                                {searchBarValue.length != 0 ? 
+                                    <IconButton onClick={onCancelSearch}>
+                                     <CloseIcon/>
+                                    </IconButton>
+                                : 
+                                <IconButton onClick={onCancelSearch}>
+                                     <SearchIcon/>
+                                </IconButton>
+                                }
+
+                            </Box>
+                            <Table>
                             <TableHead>
                                 <TableRow className={classes.headerRow}>
                                 <TableCell></TableCell>
@@ -224,7 +250,12 @@ export default function ExamsList() {
                                             </Tooltip>
                                             <Tooltip title="Delete">
                                                 <IconButton id={row.id} onClick={onClickHandlerDelete} >
-                                                    <DeleteIcon color="primary" fontSize="large"/>
+                                                    <DeleteIcon  fontSize="large"/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Monitoring and results">
+                                                <IconButton id={row.id} onClick={onClickHandlerViewResults} >
+                                                    <VisibilityIcon  fontSize="large"/>
                                                 </IconButton>
                                             </Tooltip>
                                         </ButtonGroup>
@@ -248,6 +279,7 @@ export default function ExamsList() {
                             <Link className="ButtonAppBarLink" to="../newExam">Add new exam</Link> 
                         </Button>
                     </Box>
+                    <Outlet/>
                 </Container>
         ); 
 }

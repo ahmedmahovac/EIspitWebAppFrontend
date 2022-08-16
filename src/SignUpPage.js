@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import './SignUpPage.css';
+import styles from './SignUpPage.module.css';
 import {Link as LinkRouter} from 'react-router-dom';
 
 
@@ -143,7 +143,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <LinkRouter to="/login" className='helpLinks'>
+                <LinkRouter to="/login" className={styles.helpLinks}>
                   Already have an account? Sign in
                 </LinkRouter>
               </Grid>
