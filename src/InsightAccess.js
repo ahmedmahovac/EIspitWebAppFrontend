@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import Annotation from 'react-image-annotation';
+
 
 export default function ExamAccess() {
 
@@ -14,7 +14,7 @@ export default function ExamAccess() {
     };
 
     const handleClick = (event) => {
-        navigate("../examAccessEnterPersonalInfo");
+        navigate("../ExamInsight"); // ovdje dodat neku rutu sa parametrom koji je jedinstveni kljuc studenta...
     }
 
       return (
@@ -27,14 +27,14 @@ export default function ExamAccess() {
                     alignItems: "center"
                 }}>
                     <Typography variant='h5'>
-                        Enter Exam Key
+                        Enter Insight Key
                     </Typography>
                     <Box component="form"  noValidate sx={{
                         mt: 1, padding: "5px"
                     }}>
                         <TextField
                         name='examKey'
-                        label="Exam key"
+                        label="Insight key"
                         fullWidth
                         required
                         id='examKey'

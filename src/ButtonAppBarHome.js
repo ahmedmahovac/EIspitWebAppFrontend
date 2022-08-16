@@ -13,6 +13,8 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CallIcon from '@mui/icons-material/Call';
 import styles from './ButtonAppBar.module.css';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+
 import {
   Link, Outlet
 } from "react-router-dom";
@@ -46,6 +48,9 @@ export default function ButtonAppBar() {
             <ButtonGroup variant='text' >
               <Button startIcon={<PlayArrowIcon/>} color="inherit">
                 <Link className={styles.ButtonAppBarLink} to="/examAccess">Pristup Ispitu</Link>
+              </Button>
+              <Button startIcon={<ImageSearchIcon/>} color="inherit">
+                <Link className={styles.ButtonAppBarLink} to="/insightAccess">E-Uvid</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center'>

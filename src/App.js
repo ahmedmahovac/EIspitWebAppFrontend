@@ -19,7 +19,8 @@ import ExamsList from './ExamsList';
 import UploadImages from './UploadImages';
 import NewExam from './NewExam.js';
 import Exam from './Exam';
-
+import InsightAccess from './InsightAccess';
+import ExamInsight from './ExamInsight';
 
 import ButtonAppBarExam from './ButtonAppBarExam';
 import EnterPersonalInfoExam from './EnterPersonalInfoExam';
@@ -46,6 +47,15 @@ class App extends Component {
                 <Route exact path='examAccess' element={<ExamAccess/>}>
 
                 </Route>
+
+                <Route exact path='insightAccess' element={<InsightAccess/>}>
+                  
+                  </Route>
+
+                  <Route exact path='examInsight' element={<ExamInsight/>}>
+                  
+                  </Route>
+
                 <Route exact path='examAccessEnterPersonalInfo' element={<EnterPersonalInfoExam/>}>
                   
                   </Route>
