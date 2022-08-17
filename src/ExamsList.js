@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip, Paper, TextField } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Typography, IconButton, Tooltip, Paper, TextField, TableSortLabel } from "@mui/material";
 import React, { Component, useState, useEffect, useContext } from "react";
 
 
@@ -17,7 +17,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from '@mui/material/TablePagination';
 
 import {Link, Outlet, useNavigate} from 'react-router-dom';
@@ -27,6 +26,7 @@ import SearchBar from "material-ui-search-bar";
 import CloseIcon from '@mui/icons-material/Close';
 import Close from "@mui/icons-material/Close";
 
+import styles from './ButtonAppBar.module.css';
 
 const useStyles = makeStyles({
     headerRow: {
@@ -223,19 +223,19 @@ export default function ExamsList() {
                             <Table>
                             <TableHead>
                                 <TableRow className={classes.headerRow}>
-                                <TableCell></TableCell>
-                                <TableCell id="cellTitle" align="right" onClick={handleSortRequest}>
-                                    <TableSortLabel active direction={orderDirectionTitle}>
-                                        Title
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell id="cellCreatedTime" align="right" onClick={handleSortRequest}>
-                                    <TableSortLabel active direction={orderDirectionCreatedTime}>
-                                        Created time
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell align="right">Exam key</TableCell>
-                                <TableCell align="right">Open</TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell id="cellTitle" align="right" onClick={handleSortRequest}>
+                                        <TableSortLabel active direction={orderDirectionTitle}>
+                                            Title
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell id="cellCreatedTime" align="right" onClick={handleSortRequest}>
+                                        <TableSortLabel active direction={orderDirectionCreatedTime}>
+                                            Created time
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell align="right">Exam key</TableCell>
+                                    <TableCell align="right">Open</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -264,7 +264,7 @@ export default function ExamsList() {
                                     <TableCell align="right">{row.createdTime.toLocaleDateString()}</TableCell>
                                     <TableCell align="right">{row.examKey}</TableCell>
                                     <TableCell align="right">{
-                                    <Switch offColor={"#ff355e"} onColor={"#22c1c3"} id={""+ row.id} checked={row.open} onChange={handleSwitchChange}/>
+                                        <Switch offColor={"#ff355e"} onColor={"#22c1c3"} id={""+ row.id} checked={row.open} onChange={handleSwitchChange}/>
                                     }</TableCell>
                                 </TableRow>
                                 ))}
@@ -276,7 +276,7 @@ export default function ExamsList() {
                             justifySelf: "center",
                             backgroundColor: "#22c1c3"
                         }}>
-                            <Link className="ButtonAppBarLink" to="../newExam">Add new exam</Link> 
+                            <Link className={styles.ButtonAppBarLink} to="../newExam">Add new exam</Link> 
                         </Button>
                     </Box>
                     <Outlet/>
