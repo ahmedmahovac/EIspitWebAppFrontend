@@ -1,9 +1,10 @@
-import { Box, Container, List, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from '@mui/material';
+import { Box, Collapse, Container, FormControlLabel, Grid, List, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, TextField, Typography } from '@mui/material';
 import React, { createContext, useState } from 'react';
 import { Dimensions } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
 import axios from 'axios';
 import StudentInformation from './StudentInformation';
+import TimerIcon from '@mui/icons-material/Timer';
 
 export const ExamContext = createContext();
 
@@ -20,6 +21,14 @@ export default function Exam() {
 
     const handleListItemClick = (index) => {
         setSelectedIndex(index);
+    }
+
+
+
+    const [showMonitoringOptions, setShowMonitoringOptions] = useState(false);
+
+    const handleShowMonitoringOptionsChange = (event) => {
+        setShowMonitoringOptions(event.target.checked);
     }
 
     return(
@@ -50,7 +59,7 @@ export default function Exam() {
                                 </ListItemButton>
                                 );  
                             })}
-                    </List>
+                        </List>
                     </Paper>
                     <Paper sx={{
                         flexGrow: 1,
@@ -61,6 +70,36 @@ export default function Exam() {
                         <StudentInformation/>
                     </Paper>
                 </Box>
+                <Paper sx={{
+                    marginTop: "10px",
+                    backgroundColor: "#96ccff"
+                }}>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <FormControlLabel control={<Switch defaultChecked checked={showMonitoringOptions} onChange={handleShowMonitoringOptionsChange} />} label="Show monitoring options" />
+                    </Box>
+                    <Collapse in={showMonitoringOptions} timeout="auto" unmountOnExit> 
+                        <Grid container spacing={2}>
+                            <Grid >
+                                <Paper>
+                                    <TimerIcon></TimerIcon>
+                                    <Typography>Add additional time</Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid>
+                                <Paper>
+                                    <TimerIcon></TimerIcon>
+                                    <Typography>Add additional time</Typography>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </Collapse>
+
+                </Paper>
             </Container>
         </ExamContext.Provider>
     );

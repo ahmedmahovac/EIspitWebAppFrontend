@@ -16,7 +16,7 @@ import ExamAccess from './ExamAccess';
 import ContactPage from './ContactPage';
 import Ispit from './Ispit';
 import ExamsList from './ExamsList';
-import UploadImages from './UploadImages';
+import UploadImagesBasic from './UploadImagesBasic';
 import NewExam from './NewExam.js';
 import Exam from './Exam';
 import InsightAccess from './InsightAccess';
@@ -29,6 +29,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
+import UploadImagesExtra from './UploadImagesExtra';
 
 class App extends Component {
 
@@ -37,6 +38,7 @@ class App extends Component {
       <Router>
           <Box>
             <Routes>
+            <Route exact path='uploadImages' element={<UploadImagesExtra/>}/>
               <Route exact path='' element={<ButtonAppBarHome/>}>
                 <Route exact path='login' element={<SignIn/>}>
                   
@@ -60,9 +62,6 @@ class App extends Component {
                   
                   </Route>
                 <Route exact path='contact' element={<ContactPage/>}>
-
-                </Route>
-                <Route exact path='uploadImage' element={<UploadImages/>}>
 
                 </Route>
                 <Route exact path='home' element={<MainPage/>}>

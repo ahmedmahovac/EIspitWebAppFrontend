@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
-import UploadImages from './UploadImages';
+import UploadImagesBasic from './UploadImagesBasic';
 import PitanjePreview from './PitanjePreview';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
@@ -256,7 +256,7 @@ export default function NewExam() {
                                 {checkboxState.checkboxImages&&(
                                     <Paper elevation={2} sx={{m: 1}}>
                                         <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>Upload images as formulation of question.</Typography>
-                                        <UploadImages/>
+                                        <UploadImagesBasic/>
                                     </Paper>
                                 )}
                                 {checkboxState.checkboxPdf ? 

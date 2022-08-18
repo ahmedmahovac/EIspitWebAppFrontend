@@ -1,11 +1,14 @@
-import { Box, Container, CssBaseline, Typography } from '@mui/material';
-import { Component } from 'react';
+import { Box, Collapse, Container, CssBaseline, Typography } from '@mui/material';
+import { Component, useState } from 'react';
 import CardPitanje from './CardPitanje';
 import pitanja from './Pitanja.js';
 import Odgovor from './Odgovor.js';
 
 
 export default function Ispit() {
+
+
+    const [answeringAvailable, setAnsweringAvailable] = useState(true); //asinhrono cemo provjeravati dal je od servera poslano da je ovo omoguceno, u nekim vremenskim intervalima
 
     return(
         <Container component="main" maxWidth="xl">
@@ -27,7 +30,9 @@ export default function Ispit() {
                                 width: "100%"
                             }}>
                                 <CardPitanje text={item.text} imageUrl={item.imageUrl} index={index+1}/>
-                                <Odgovor/>
+                                <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
+                                 <Odgovor/>
+                                </Collapse>
                             </Box>
                         );
                 })}

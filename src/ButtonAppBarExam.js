@@ -16,7 +16,7 @@ import styles from './ButtonAppBar.module.css';
 import {
   Link, Outlet
 } from "react-router-dom";
-
+import BatteryGauge from 'react-battery-gauge';
 
 
 const Completionist = () => <div>Time is up</div>;
@@ -34,6 +34,15 @@ export default function ButtonAppBar() {
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
             E-Ispit
           </Typography>
+          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
+          <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+            <ButtonGroup sx={{alignSelf: "center"}} variant='text' size='large'>
+                <BatteryGauge value={70} size={70}></BatteryGauge>
+            </ButtonGroup>  
+            <Typography variant="subtitle2" align='center' >
+              Battery level
+            </Typography>
+          </ButtonGroup>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>

@@ -10,7 +10,7 @@ const UploadImageFromMobilePage = () => {
       const selectedFiles = event.target.files;
   
       const image = URL.createObjectURL(selectedFiles[0]);
-  
+      console.log(image)
       setSelectedImages((previousImages) => previousImages.concat(image));
   
       // FOR BUG IN CHROME
@@ -54,6 +54,7 @@ const UploadImageFromMobilePage = () => {
         <div className={styles.images}>
           {selectedImages &&
             selectedImages.map((image, index) => {
+              console.log(image)
               return (
                 <div key={image} className={styles.image}>
                   <Zoom>
