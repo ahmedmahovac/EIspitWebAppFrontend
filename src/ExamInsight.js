@@ -1,4 +1,4 @@
-import { Button, Collapse, Container, Grid, IconButton, ImageList, ImageListItem, Paper, TextField, Tooltip, Typography } from '@mui/material';
+import { Button, Collapse, Container, FormControl, FormHelperText, Grid, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Annotation from 'react-image-annotation';
 import CreateIcon from '@mui/icons-material/Create';
@@ -38,6 +38,11 @@ export default function ExamInsight() {
 
     const [openImages, setOpenImages] = useState(false);
 
+    const [selectedQuestion, setSelectedQuestion] = useState(0);
+
+    const handleSelectQuestion = (event) => {
+        setSelectedQuestion(event.target.value);
+    }
 
     const handleComplaintSubmit = (event) => {
         event.preventDefault();
@@ -62,6 +67,21 @@ export default function ExamInsight() {
             <Typography variant='subtitle1'>Show images</Typography>
             </Box>
             <Collapse in={openImages} timeout="auto" unmountOnExit>
+                <FormControl fullWidth >
+                    <InputLabel sx={{m: 1}}>Question</InputLabel>
+                    <Select
+                    sx={{m: 1}}
+                    value={selectedQuestion}
+                    onChange={handleSelectQuestion}
+                    label="Question"
+                    >
+                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={2}>2</MenuItem>
+                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={4}>4</MenuItem>
+                    </Select>
+                    <FormHelperText>Select question for answers presence</FormHelperText>
+                </FormControl>
                 <ImageList sx={{ width: "100%"}} cols={1}>
                         {itemData.map((item,index) => (
                                 <ImageListItem key={item.img}>

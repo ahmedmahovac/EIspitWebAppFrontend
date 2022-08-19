@@ -11,7 +11,7 @@ export default function UploadImagesExtra() {
 
     const onSelectFile = (event) => {
         const selectedFiles = event.target.files;
-        loadImage(selectedFiles[0], {noRevoke: true, canvas: true}).then((data)=>{
+        loadImage(selectedFiles[0], {noRevoke: true, canvas: true}).then((data)=>{// ovo je isto sporo. Ima tamo nekih metoda u blueimp docs s kojima se moze prikazat proces loadanja slike
             setSelectedImages(selectedImages.concat(data.image));
         })
     }
@@ -20,7 +20,7 @@ export default function UploadImagesExtra() {
 
     const handleRotationRight = (event) => {
         let transformedImage = loadImage.scale(selectedImages[selectedImages.length-1], {noRevoke: true, orientation: 6, canvas: true});
-        setSelectedImages(selectedImages.slice(0,-1).concat(transformedImage));
+        setSelectedImages(selectedImages.slice(0,-1).concat(transformedImage)); // ovo je prilicno spora operacija, zato je bolje imat neku trenutnu sliku i samo sa njom manipulisat dok se transformacija ne potvrdi
     }
 
     const handleRotationLeft = (event) => {
@@ -42,7 +42,12 @@ export default function UploadImagesExtra() {
             >
             </Input>
             {selectedImages.length != 0 && 
-            <Box>
+            <Box sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+            }}>
                 <img src={selectedImages[selectedImages.length-1].toDataURL()}/> 
                 <Box sx={{
                     display: "flex",

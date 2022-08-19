@@ -78,6 +78,7 @@ class App extends Component {
                 <Route exact path='exams' element={<ExamsList/>}>
                 </Route>
                 <Route exact path='newExam' element={<NewExam/>}></Route>
+                <Route exact path='editExam' element={<NewExam/>}></Route>
               </Route>
               <Route path='*' element={
                 <div>

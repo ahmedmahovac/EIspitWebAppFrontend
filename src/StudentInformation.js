@@ -1,4 +1,4 @@
-import { Box, IconButton, ImageList, ImageListItem, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Checkbox, FormControl, FormControlLabel, FormHelperText, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ExamContext } from './Exam';
@@ -15,7 +15,7 @@ export default function StudentInformation() {
 
     const {students, selectedIndex} = useContext(ExamContext);
     const [open, setOpen] = useState(false);
-    const itemData = [
+    const itemData = [ // ovdje ce se stavljati images za trenutno odabrano pitanje
       {
         img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
         title: 'Breakfast',
@@ -76,6 +76,12 @@ export default function StudentInformation() {
       },
     ];
 
+      const [includeComment, setIncludeComment] = useState(itemData.map(()=>{return false;}));
+
+      const handleChangeIncludeComment = (event) => {
+        setIncludeComment(includeComment.map(()=>event.target.checked));
+      }
+
       const [annotation, setAnnotation] = useState(itemData.map((item,index)=>{return {};}));
       const [annotations, setAnnotations] = useState(itemData.map((item,index)=>{return [];}));
     
@@ -83,6 +89,13 @@ export default function StudentInformation() {
       const [disableAnnotations, setDisableAnnotations] = useState(itemData.map(()=>true));
 
       const [clickedImage, setClickedImage] = useState(null);
+
+      const [selectedQuestion, setSelectedQuestion] = useState(0);
+
+      const handleSelectQuestion = (event) => {
+        // ovdje stavis setItemData na slike samo poslane za izabrano pitanje
+        setSelectedQuestion(event.target.value);
+      }
 
       const onChange = (ann) => {
         setAnnotation(annotation.map((item,index)=>{
@@ -163,6 +176,40 @@ export default function StudentInformation() {
             <Typography variant='subtitle1'>Show student answer</Typography>
             </Box>
             <Collapse in={open} timeout="auto" unmountOnExit>
+              <FormControl fullWidth >
+                <InputLabel sx={{m: 1}}>Question</InputLabel>
+                <Select
+                  sx={{m: 1}}
+                  value={selectedQuestion}
+                  onChange={handleSelectQuestion}
+                  label="Question"
+                >
+                  <MenuItem value={1}>1</MenuItem>
+                  <MenuItem value={2}>2</MenuItem>
+                  <MenuItem value={3}>3</MenuItem>
+                  <MenuItem value={4}>4</MenuItem>
+                </Select>
+                <FormHelperText>Select question for answers presence</FormHelperText>
+              </FormControl>
+                <Box sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}>
+                  <Tooltip title="Rate answer">
+                      <TextField label="Points" sx={{padding: 1, margin: 1}}></TextField>
+                    </Tooltip>
+                    <FormControlLabel
+                    control={
+                    <Checkbox sx={{color: "#22c1c3"}} checked={includeComment[selectedQuestion]} onChange={handleChangeIncludeComment} name="checkboxAdditionalComment" />
+                    }
+                    label="Include general comment on this question's answer"
+                    />
+                  </Box>
+                  <Collapse in={includeComment[selectedQuestion]} timeout="auto" unmountOnExit>
+                    <TextField sx={{padding: 1}} label="Comment here" multiline fullWidth></TextField>
+                  </Collapse>
                 <ImageList sx={{ width: "100%"}} cols={1}>
                     {itemData.map((item,index) => (
                             <ImageListItem key={item.img}>
@@ -176,41 +223,41 @@ export default function StudentInformation() {
                                 allowTouch
                                 disableAnnotation={clickedImage!==index}
                             />
-                            <Paper sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "right",
-                              alignItems: "center"
-                            }}>
-                              <Tooltip title="Delete previously added annotation">
-                                <IconButton disabled={clickedImage!==index} size='large' onClick={handleUndo}>
-                                  <UndoIcon/>
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Add annotations to this image">
-                              <IconButton disabled={clickedImage===index} onClick={(event)=>{
-                              setClickedImage(index);
-                              setDisableAnnotations(disableAnnotations.map((item,i)=>{
-                                if(index===i) return false;
-                                else return true;
-                              }));
+                              <Paper sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "right",
+                                alignItems: "center",
+                                width: "100%"
                               }}>
-                                    <AddIcon />
-                              </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Close adding annotation">
-                                <IconButton disabled={clickedImage!==index} onClick={(event)=>{
-                                setClickedImage(null);
+                                <Tooltip title="Delete previously added annotation">
+                                  <IconButton disabled={clickedImage!==index} size='large' onClick={handleUndo}>
+                                    <UndoIcon/>
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Add annotations to this image">
+                                <IconButton disabled={clickedImage===index} onClick={(event)=>{
+                                setClickedImage(index);
                                 setDisableAnnotations(disableAnnotations.map((item,i)=>{
-                                  return true;
+                                  if(index===i) return false;
+                                  else return true;
                                 }));
-                                setAnnotation(annotation.map((item,index)=>{return {};}));
                                 }}>
-                                      <CloseIcon />
+                                      <AddIcon />
                                 </IconButton>
-                              </Tooltip>
+                                </Tooltip>
+                                <Tooltip title="Close adding annotation">
+                                  <IconButton disabled={clickedImage!==index} onClick={(event)=>{
+                                  setClickedImage(null);
+                                  setDisableAnnotations(disableAnnotations.map((item,i)=>{
+                                    return true;
+                                  }));
+                                  setAnnotation(annotation.map((item,index)=>{return {};}));
+                                  }}>
+                                        <CloseIcon />
+                                  </IconButton>
+                                </Tooltip>
                             </Paper>
-                            
                             </ImageListItem>
                     ))} 
                 </ImageList>

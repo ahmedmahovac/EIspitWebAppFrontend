@@ -159,7 +159,8 @@ export default function ExamsList() {
 
 
         const onClickHandlerEdit = (event) => {
-
+            navigate("../editExam"); // samo da upamti koji exam otvaramo i prikaze vec podesene stvari, onda da se jos moze dodat itd. Ovo je slican prikaz ko
+            // ruta newExam al ce imat drugi kontekst. nema smisla da preusmjerimo na rutu koja se tako zove, tako da cemo dodat novu editExam
         }
 
         const onClickHandlerViewResults = (event) => {

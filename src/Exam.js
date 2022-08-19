@@ -1,12 +1,27 @@
-import { Box, Collapse, Container, FormControlLabel, Grid, List, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Collapse, Container, FormControlLabel, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Switch, TextField, Typography } from '@mui/material';
 import React, { createContext, useState } from 'react';
 import { Dimensions } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
 import axios from 'axios';
 import StudentInformation from './StudentInformation';
 import TimerIcon from '@mui/icons-material/Timer';
+import Advantagecard from './Advantagecard';
 
 export const ExamContext = createContext();
+
+
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
 
 export default function Exam() {
 
@@ -24,11 +39,24 @@ export default function Exam() {
     }
 
 
+    
+
 
     const [showMonitoringOptions, setShowMonitoringOptions] = useState(false);
 
     const handleShowMonitoringOptionsChange = (event) => {
         setShowMonitoringOptions(event.target.checked);
+    }
+
+
+    const [openSetAdditionalTimeModal, setOpenSetAdditionalTimeModal] = useState(false);
+
+    const handleOpenSetAdditionalTime = (event) => {
+        setOpenSetAdditionalTimeModal(true);
+    }
+
+    const handleCloseSetAdditionalTimeModal = (event) => {
+        setOpenSetAdditionalTimeModal(false);
     }
 
     return(
@@ -84,22 +112,42 @@ export default function Exam() {
                     </Box>
                     <Collapse in={showMonitoringOptions} timeout="auto" unmountOnExit> 
                         <Grid container spacing={2}>
-                            <Grid >
-                                <Paper>
-                                    <TimerIcon></TimerIcon>
-                                    <Typography>Add additional time</Typography>
-                                </Paper>
-                            </Grid>
-                            <Grid>
-                                <Paper>
-                                    <TimerIcon></TimerIcon>
-                                    <Typography>Add additional time</Typography>
+                            <Grid item>
+                                <Paper elevation={10} sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: "5px",
+                                    margin: "5px"
+                                }}>
+                                    <IconButton onClick={handleOpenSetAdditionalTime}>
+                                        <TimerIcon sx={{fontSize: 50}} color="primary"></TimerIcon>
+                                    </IconButton>
+                                    <Typography variant='h5'>Set additional time</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>
+                        <Grid item>
+                        </Grid>
                     </Collapse>
-
                 </Paper>
+                <Modal
+                open={openSetAdditionalTimeModal}
+                onClose={handleCloseSetAdditionalTimeModal}
+                >
+                    <Box sx={modalStyle}>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                            <TextField label="Enter time in minutes" sx={{margin: 1, padding: 1}}></TextField>
+                            <Button color='primary' variant='contained'>Set time</Button>
+                        </Box>
+                    </Box>
+                </Modal>
             </Container>
         </ExamContext.Provider>
     );

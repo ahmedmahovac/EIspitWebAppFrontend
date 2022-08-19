@@ -102,14 +102,16 @@ export default function SignIn() {
             >
               Prijava
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to="/" className={styles.helpLinks}>
+            <Grid container sx={{
+              width: "100%"
+            }}>
+              <Grid item xs={6}>
+              <Link to="/" className={styles.helpLinks}>
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item> 
-                <Link to="/registration" className={styles.helpLinks}>
+              <Grid item xs={6}>
+              <Link sx={{marginLeft: 10}} to="/registration" className={styles.helpLinks}>
                   Don't have an account? Sign Up
                 </Link>
               </Grid>
