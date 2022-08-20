@@ -12,16 +12,25 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from "react-router-dom";
+import { userContext} from './App';
+import axios from 'axios';
+
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import styles from './SignUpPage.module.css';
+import { useContext } from 'react';
 
 const theme = createTheme();
 
 
+
 export default function SignIn() {
+
+  const [errors, setErrors] = React.useState("");
+  
+  const {setUser} = useContext(userContext); 
 
   const formik = useFormik({
     initialValues: {
@@ -40,10 +49,20 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    axios.post('/login', data)
+    .then(res=> {
+       localStorage.setItem('jwtToken', res.data.token)
+       axios.defaults.headers.common['Authorization'] =    
+         'Bearer'+res.data.token
+       setUser({ auth:true, name: res.data.username }) // vraca mi username jer sam dao tu informaciju prilikom registracije (first + lastname cemo stavit da je username)
+    })
+    .catch(err=>{
+       if(err.response){
+         if(err.response.status===401) setErrors('Invalid credentials')
+         else setErrors('Please try again.')
+    }
+       console.log(err)
+    })
   };
 
   return (
@@ -117,6 +136,7 @@ export default function SignIn() {
               </Grid>
             </Grid>
           </Box>
+          {errors}
         </Box>
       </Container>
     </ThemeProvider>

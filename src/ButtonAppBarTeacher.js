@@ -18,13 +18,16 @@ import {
 } from "react-router-dom";
 import { createContext } from 'react';
 import { useState } from 'react';
-
-
+import axios from 'axios';
+import { userContext } from './App';
+import { useContext } from 'react';
 
 export const TeacherContext = createContext();
 
 
 export default function ButtonAppBar() {
+
+  const {setUser} = useContext(userContext);
 
   const [exams, setExams] = useState([{
     id: 1,
@@ -48,6 +51,18 @@ export default function ButtonAppBar() {
     open: true
 }]);
 
+
+const handleLogout = (e) => {
+  e.preventDefault(e);
+  axios.get('/logout')
+  .then(res=>{
+  localStorage.removeItem('jwtToken')
+  delete axios.defaults.headers.common['Authorization']
+  setUser({ auth:false, name:'' })
+  })
+  .catch(err=>console.log(err))
+}
+
   return (
     <TeacherContext.Provider value={{exams, setExams}}>
       <Box sx={{ flexGrow: 1}}>
@@ -70,8 +85,8 @@ export default function ButtonAppBar() {
               </Button>
               </ButtonGroup>
               <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
-              <Button startIcon={<LogoutIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
-                  <Link className={styles.ButtonAppBarLink} to="/">Log out</Link>
+              <Button startIcon={<LogoutIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text' onClick={handleLogout}>
+                  <Link className={styles.ButtonAppBarLink}>Log out</Link>
               </Button>
               </ButtonGroup>
               <Divider className='dividerGeneral' orientation="vertical" flexItem/>
