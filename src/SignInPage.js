@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { userContext} from './App';
 import axios from 'axios';
 
@@ -21,6 +21,7 @@ import * as Yup from 'yup';
 
 import styles from './SignUpPage.module.css';
 import { useContext } from 'react';
+import { useEffect } from 'react';
 
 const theme = createTheme();
 
@@ -30,7 +31,15 @@ export default function SignIn() {
 
   const [errors, setErrors] = React.useState("");
   
-  const {setUser} = useContext(userContext); 
+  const {user, setUser} = useContext(userContext); 
+
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(user.auth) {
+      navigate("../teacher");
+    }
+  }, [user]); // ovo se izvrsava i kad se komponenta mounta, tako da radi kad udjemo u login a vec smo prijavljeni, automatski redirecta
 
   const formik = useFormik({
     initialValues: {
@@ -39,31 +48,23 @@ export default function SignIn() {
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Invalid email address').required('Email is required'),
-      password: Yup.string().required("Password is required").min(6, "Password too short! Must be at least 6 characters.")
+      password: Yup.string().required("Password is required")
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      axios.post('/login', values)
+      .then(res=> {
+        localStorage.setItem('jwtToken', res.data.token)
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+res.data.token
+        setUser({ auth:true, name: res.data.username }) // vraca mi username jer sam dao tu informaciju prilikom registracije (first + lastname cemo stavit da je username)
+      })
+      .catch(err=>{
+        if(err.response){
+          if(err.response.status===401) setErrors('Invalid credentials')
+          else setErrors('Please try again.')
+        }
+      })
     },
   });
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    axios.post('/login', data)
-    .then(res=> {
-       localStorage.setItem('jwtToken', res.data.token)
-       axios.defaults.headers.common['Authorization'] =    
-         'Bearer'+res.data.token
-       setUser({ auth:true, name: res.data.username }) // vraca mi username jer sam dao tu informaciju prilikom registracije (first + lastname cemo stavit da je username)
-    })
-    .catch(err=>{
-       if(err.response){
-         if(err.response.status===401) setErrors('Invalid credentials')
-         else setErrors('Please try again.')
-    }
-       console.log(err)
-    })
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -79,7 +80,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Prijava
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               fullWidth
@@ -136,8 +137,9 @@ export default function SignIn() {
               </Grid>
             </Grid>
           </Box>
-          {errors}
+          {<Typography variant='subtitle1' sx={{color: "#ff355e", marginTop: 2, fontWeight: "bold"}}>{errors}</Typography>}
         </Box>
+        <Typography></Typography>
       </Container>
     </ThemeProvider>
   );

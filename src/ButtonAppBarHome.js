@@ -14,13 +14,19 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CallIcon from '@mui/icons-material/Call';
 import styles from './ButtonAppBar.module.css';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { userContext } from './App';
 import {
   Link, Outlet
 } from "react-router-dom";
+import { useContext } from 'react';
+import { Fragment } from 'react';
 
 
 export default function ButtonAppBar() {
+
+  const {user,setUser} = useContext(userContext);
+
   return (
     <Box sx={{ flexGrow: 1}}>
       <AppBar position="sticky">
@@ -63,6 +69,17 @@ export default function ButtonAppBar() {
             <Link className={styles.ButtonAppBarLink} to="/contact">Kontakt</Link>
           </Button>
           </ButtonGroup>
+          {user.auth && (
+            <Fragment>
+              <Divider className='dividerGeneral' orientation="vertical" flexItem/>
+              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+              <Button className={styles.ButtonAppBarLink} startIcon={<AccountCircleIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                  <Link className={styles.ButtonAppBarLink} to="../teacher/profile">{user.name}</Link>
+              </Button>
+              </ButtonGroup>
+            </Fragment>
+          )
+          }
         </Toolbar>
       </AppBar>
       <Outlet/>

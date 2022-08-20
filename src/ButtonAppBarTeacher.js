@@ -14,20 +14,43 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import styles from './ButtonAppBar.module.css';
 import {
-  Link, Outlet
+  Link, Outlet, useNavigate
 } from "react-router-dom";
 import { createContext } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { userContext } from './App';
 import { useContext } from 'react';
+import { useEffect } from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Fragment } from 'react';
+
 
 export const TeacherContext = createContext();
 
+// protected route
 
 export default function ButtonAppBar() {
 
-  const {setUser} = useContext(userContext);
+  const {user,setUser} = useContext(userContext);
+
+
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(!user.auth) {
+      navigate("../login");
+    }
+  }, []);
+
+
+  useEffect(()=>{
+    if(!user.auth) {
+      navigate("../login");
+    }
+  }, [user]); // mada bi ovo pokupio i onMountEvent tj ovo sto sam stavio da se desi iznad al hajd
+
+
 
   const [exams, setExams] = useState([{
     id: 1,
@@ -81,12 +104,7 @@ const handleLogout = (e) => {
               </ButtonGroup>
               <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
               <Button startIcon={<AccountBoxIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
-                  <Link className={styles.ButtonAppBarLink} to="/">Profile</Link>
-              </Button>
-              </ButtonGroup>
-              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
-              <Button startIcon={<LogoutIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text' onClick={handleLogout}>
-                  <Link className={styles.ButtonAppBarLink}>Log out</Link>
+                  <Link className={styles.ButtonAppBarLink} to="../teacher/profile">Profile</Link>
               </Button>
               </ButtonGroup>
               <Divider className='dividerGeneral' orientation="vertical" flexItem/>
@@ -95,6 +113,17 @@ const handleLogout = (e) => {
                   <Link className={styles.ButtonAppBarLink} to="/contact">Contact</Link>
               </Button>
               </ButtonGroup>
+                <Divider className='dividerGeneral' orientation="vertical" flexItem/>
+                <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+                <Button className={styles.ButtonAppBarLink} startIcon={<AccountCircleIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
+                    <Link className={styles.ButtonAppBarLink} to="../teacher/profile">{user.name}</Link>
+                </Button>
+                </ButtonGroup>
+                <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
+                <Button startIcon={<LogoutIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text' onClick={handleLogout}  sx={{"&:hover":{color: "black"}}}>
+                    Log out
+                </Button>
+                </ButtonGroup>
             </ButtonGroup>
           </Toolbar>
         </AppBar>

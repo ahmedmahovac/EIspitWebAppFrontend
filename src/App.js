@@ -46,7 +46,7 @@ function App() {
   const [user, setUser] = useState({auth:false, username: ""});
 
     return (
-      <userContext.Provider value={user, setUser}>
+      <userContext.Provider value={{user: user, setUser: setUser}}>
         <Router>
             <Box>
               <Routes>
