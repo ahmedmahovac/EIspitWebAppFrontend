@@ -27,9 +27,10 @@ export default function Profile() {
           newPassword: Yup.string().required("New password is required").min(6, 'Password is too short - should be 8 chars minimum.').matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
         }),
         onSubmit: values => {
-            axios.post("/updatePassword", values).then((res)=>{
+            console.log(user)
+            axios.post("/updatePassword", {...values, user: user.name}).then((res)=>{
                 const status = res.status;
-                setNewPasswordAdded(true);
+                setNewPasswordAdded(true); // mozda da redirectam na login page i odjavim ga
                 setErrors("");
             }).catch(err => {
                 if(err.response){

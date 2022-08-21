@@ -13,18 +13,32 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styles from './SignUpPage.module.css';
-import {Link as LinkRouter} from 'react-router-dom';
+import {Link as LinkRouter, useNavigate} from 'react-router-dom';
+import axios from 'axios';
 
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
 
+  const [errors, setErrors] = useState("");
   
+  const navigate = useNavigate();
+
+  const [registeredSuccessfully, setRegisteredSuccessfully] = useState(false);
+
+  useEffect(()=>{
+    if(registeredSuccessfully) {
+      navigate("../login");
+    }
+  },[registeredSuccessfully]);
+
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -36,10 +50,17 @@ export default function SignUp() {
       firstName: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
       lastName: Yup.string().max(20, 'Must be 20 characters or less').required('Required'),
       email: Yup.string().email('Invalid email address').required('Email is required'),
-      password: Yup.string().required("Password is required").min(6, "Password too short! Must be at least 6 characters.")
+      password: Yup.string().required("Password is required").min(6, "Password too short! Must be at least 6 characters.").matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      axios.post("/register", values).then((res)=>{
+        setRegisteredSuccessfully(true);
+        setErrors("");
+        alert("Registration successful! Login now.");
+      }).catch(err => {
+        if(err.response.status === 400) setErrors("Email already in use.");
+        else setErrors("Internal server error. Please try again.");
+      });
     },
   });
 
@@ -70,7 +91,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Registracija
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -137,9 +158,10 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
+              onClick={formik.handleSubmit}
               sx={{ mt: 3, mb: 2 }}
             >
-              Registracija
+              Register
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
@@ -149,6 +171,7 @@ export default function SignUp() {
               </Grid>
             </Grid>
           </Box>
+          {<Typography variant='subtitle1' sx={{color: "#ff355e", marginTop: 2, fontWeight: "bold"}}>{errors}</Typography>}
         </Box>
       </Container>
     </ThemeProvider>
