@@ -114,7 +114,6 @@ export default function ExamsList() {
 
         const handleSwitchChange = (value, event, id) => {
             axios.put("/teacher/exam/"+id, {open: value}).then(res=>{
-                console.log(res);
                 getAndSetExams(); // svjezi podaci
             }).catch((err)=>{
                 console.log(err.response);

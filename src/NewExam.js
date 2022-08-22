@@ -80,6 +80,7 @@ export default function NewExam() {
     }
 
     const handleQuestionAdded = (event) => {
+        // ovdje vec predstavi sliku i pdf u pogodnom formatu za spremanju u bazu
         setQuestions([...questions, {title: questionTitle, questionText: questionText, pdfIncluded: (pdfFile!=null ? true : false), imagesIncluded: checkboxState.checkboxImages}]);
         // ovo sve skupa moze u neku fju koja se npr zove resetuj unesene podatke za dodavanje pitanja
         setAddingQuestionActive(false);
@@ -109,7 +110,7 @@ export default function NewExam() {
 
     const handleAddExam = (event) => {
         // dodaj exam u bazu
-        axios.post("/teacher/addExam", {title: examTitle, }).then((res)=>{
+        axios.post("/teacher/addExam", {title: examTitle, questions: questions}).then((res)=>{
             // treba ponovo trazit sve exams, zato je bolje u examslist na mountu to radit jer bih sad ovdje samo mogao redirectat na tu komponentu i automatski bi se ponovo dobili svjezi podaci
             // mada mogu jednostavno dodati jedan button "refresh" na examsList, i to ima smisla
             // mogu i nakon kreiranja vratiti kreirani exam i ovdje postavit state. To je vjerovatno najlakse. Al pozeljno bi bilo dodat i refresh btn
@@ -134,9 +135,6 @@ export default function NewExam() {
         setExamTitle(event.currentTarget.value);
     }
 
-    useEffect(()=>{
-        questions.map((item)=>{console.log(item)});
-    }, [questions]);
 
 
     return(
