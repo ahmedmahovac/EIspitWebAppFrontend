@@ -25,8 +25,10 @@ import { TeacherContext } from "./ButtonAppBarTeacher";
 import SearchBar from "material-ui-search-bar";
 import CloseIcon from '@mui/icons-material/Close';
 import Close from "@mui/icons-material/Close";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import styles from './ButtonAppBar.module.css';
+import axios from "axios";
 
 const useStyles = makeStyles({
     headerRow: {
@@ -49,36 +51,9 @@ export default function ExamsList() {
         const classes = useStyles();
 
 
-        // objedini sve stateove u jedan objekat!!
-
-       /*
-
-        const [exams, setExams] = useState([{
-            id: 1,
-            examTitle: "Ispit 1", // i po ovome sortirati ima smisla
-            createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
-            examKey: "xdaswdD1",
-            open: false
-        },
-        {
-            id: 2,
-            examTitle: "Ispit 2",
-            createdTime: new Date("2020-05-12T23:50:21.817Z"),
-            examKey: "xdaswdD2",
-            open: false
-        },
-        {
-            id: 3,
-            examTitle: "Ispit 3",
-            createdTime: new Date("2020-05-12T23:50:21.817Z"),
-            examKey: "xdaswdD3",
-            open: true
-        }]);
-        */
-
         const navigate = useNavigate();
 
-        const {exams, setExams} = useContext(TeacherContext);
+        const {exams, setExams, getAndSetExams} = useContext(TeacherContext);
 
         const [searchBarValue, setSearchBarValue] = useState(""); 
         const [searchedExams, setsearchedExams] = useState(exams);
@@ -138,6 +113,14 @@ export default function ExamsList() {
 
 
         const handleSwitchChange = (value, event, id) => {
+            axios.put("/teacher/exam/"+id, {open: value}).then(res=>{
+                console.log(res);
+                getAndSetExams(); // svjezi podaci
+            }).catch((err)=>{
+                console.log(err.response);
+            });
+            // refreshovat cu, da imam sigurno svjeze podatke
+            /*
            let updatedQuestions = exams.map((item)=>{
                                 if(item.id == id) {
                                     return {...item, open: value}
@@ -145,16 +128,24 @@ export default function ExamsList() {
                                 else return item
                             });
             setExams(updatedQuestions);
+            */
         }
 
 // promijenit id-ove ovih ikona, jer vec takve postoje
         const onClickHandlerDelete = (event) => {
+            axios.delete("/teacher/exam/"+event.currentTarget.id).then(res=>{
+                console.log(res.data); // i za ovo mogu dodat neki indikator da je uspjesno izbrisan mada ne mora, vidi se da ga nema
+                getAndSetExams();
+            }).catch(err => {
+                console.log(err); // dodaj neki indikator na UI
+            });
+            /*
             let id = event.currentTarget.id;
-            let updatedQuestions = exams.filter((item)=>{
+            let updatedQuestions = exams.filter((item)=>{ // skupo je brisat lokalno + brisat u bazi ali je idalje stabilno stanje. Mozda je bolje da samo obrisem u bazi i onda forsiram dobavljanje svjezih podataka
                 return item.id != id;
             });   
             setExams(updatedQuestions);
-
+            */
         }
 
 
@@ -187,6 +178,9 @@ export default function ExamsList() {
             setsearchedExams(exams);
         }
 
+        const handleRefresh = (event) => {
+            getAndSetExams();
+        }
 
         return(
                 <Container sx={{
@@ -219,7 +213,11 @@ export default function ExamsList() {
                                      <SearchIcon/>
                                 </IconButton>
                                 }
-
+                                <Tooltip title="Refresh exams list.">
+                                    <IconButton onClick={handleRefresh}>
+                                        <RefreshIcon/>
+                                    </IconButton>
+                                </Tooltip>
                             </Box>
                             <Table>
                             <TableHead>
@@ -240,7 +238,7 @@ export default function ExamsList() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {searchedExams.map((row) => ( // inace se ne bi ispravno prikazivalo , ne bi se osvjezilo searcQ nakon dodavanja ispita
+                                {searchedExams.map((row) => ( 
                                 <TableRow key={row.id} className={classes.basicRow}>
                                     <TableCell align="left">
                                         <ButtonGroup variant="">
@@ -262,7 +260,7 @@ export default function ExamsList() {
                                         </ButtonGroup>
                                     </TableCell>
                                     <TableCell align="right">{row.examTitle}</TableCell>
-                                    <TableCell align="right">{row.createdTime.toLocaleDateString()}</TableCell>
+                                    <TableCell align="right">{row.createdTime}</TableCell>
                                     <TableCell align="right">{row.examKey}</TableCell>
                                     <TableCell align="right">{
                                         <Switch offColor={"#ff355e"} onColor={"#22c1c3"} id={""+ row.id} checked={row.open} onChange={handleSwitchChange}/>

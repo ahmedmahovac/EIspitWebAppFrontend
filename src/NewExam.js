@@ -17,6 +17,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { TeacherContext } from './ButtonAppBarTeacher';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function NewExam() {
 
@@ -107,6 +108,18 @@ export default function NewExam() {
     }
 
     const handleAddExam = (event) => {
+        // dodaj exam u bazu
+        axios.post("/teacher/addExam", {title: examTitle, }).then((res)=>{
+            // treba ponovo trazit sve exams, zato je bolje u examslist na mountu to radit jer bih sad ovdje samo mogao redirectat na tu komponentu i automatski bi se ponovo dobili svjezi podaci
+            // mada mogu jednostavno dodati jedan button "refresh" na examsList, i to ima smisla
+            // mogu i nakon kreiranja vratiti kreirani exam i ovdje postavit state. To je vjerovatno najlakse. Al pozeljno bi bilo dodat i refresh btn
+            let exam = res.data;
+            setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
+            navigate("../exams");
+        }).catch(err=>{
+            alert(err);
+        });
+        /*
         setExams([...exams, {
             id: Math.random(),
             examTitle: examTitle, // i po ovome sortirati ima smisla
@@ -114,7 +127,7 @@ export default function NewExam() {
             examKey: "noviIspit",
             open: false
         }]);
-        navigate("../exams");
+        */
     }
 
     const handleExamTitle = (event) => {

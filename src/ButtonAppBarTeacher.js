@@ -25,7 +25,6 @@ import { useEffect } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Fragment } from 'react';
 
-
 export const TeacherContext = createContext();
 
 // protected route
@@ -34,12 +33,26 @@ export default function ButtonAppBar() {
 
   const {user,setUser} = useContext(userContext);
 
+  const [exams, setExams] = useState([]); // da li fetchat exams cim se ucita ovaj appBar ili tek kad se otvori examsList ?
 
   const navigate = useNavigate();
+
+  const getAndSetExams = () => {
+    axios.get("/teacher/getExams").then(res=>{ // ne trebaju mi parametri jer id saljem u jwt payloadu, sad kolko je to dobra ideja i nije, al je bolje nego da stavljat podatke korisnika u url
+      setExams(res.data.map(exam => {
+        return {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id} // da bih kasnije mogao promijenit exam key u nesto drugo ako budem zelio
+      })); // dobavi iz res
+    }).catch(err=>{
+      alert(err);
+    });
+  }
 
   useEffect(()=>{
     if(!user.auth) {
       navigate("../login");
+    }
+    else {
+      getAndSetExams();
     }
   }, []);
 
@@ -49,30 +62,6 @@ export default function ButtonAppBar() {
       navigate("../login");
     }
   }, [user]); // mada bi ovo pokupio i onMountEvent tj ovo sto sam stavio da se desi iznad al hajd
-
-
-
-  const [exams, setExams] = useState([{
-    id: 1,
-    examTitle: "Ispit 1", // i po ovome sortirati ima smisla
-    createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
-    examKey: "xdaswdD1",
-    open: false
-},
-{
-    id: 2,
-    examTitle: "Ispit 2",
-    createdTime: new Date("2020-05-12T23:50:21.817Z"),
-    examKey: "xdaswdD2",
-    open: false
-},
-{
-    id: 3,
-    examTitle: "Ispit 3",
-    createdTime: new Date("2018-05-12T23:50:21.817Z"),
-    examKey: "xdaswdD3",
-    open: true
-}]);
 
 
 const handleLogout = (e) => {
@@ -87,7 +76,7 @@ const handleLogout = (e) => {
 }
 
   return (
-    <TeacherContext.Provider value={{exams, setExams}}>
+    <TeacherContext.Provider value={{exams, setExams, getAndSetExams}}>
       <Box sx={{ flexGrow: 1}}>
         <AppBar position="sticky">
           <Toolbar>

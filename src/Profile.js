@@ -28,7 +28,7 @@ export default function Profile() {
         }),
         onSubmit: values => {
             console.log(user)
-            axios.post("/updatePassword", {...values, user: user.name}).then((res)=>{
+            axios.post("/updatePassword", values).then((res)=>{
                 const status = res.status;
                 setNewPasswordAdded(true); // mozda da redirectam na login page i odjavim ga
                 setErrors("");
