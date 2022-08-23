@@ -1,14 +1,29 @@
 import { Box, Collapse, Container, CssBaseline, Typography } from '@mui/material';
-import { Component, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import CardPitanje from './CardPitanje';
 import pitanja from './Pitanja.js';
 import Odgovor from './Odgovor.js';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
 export default function Ispit() {
 
 
     const [answeringAvailable, setAnsweringAvailable] = useState(true); //asinhrono cemo provjeravati dal je od servera poslano da je ovo omoguceno, u nekim vremenskim intervalima
+
+    const [examQuestions, setExamQuestions] = useState([]); 
+
+    const {examKey} = useParams();
+
+    useEffect(()=>{
+        console.log(examKey)
+        axios.get("/student/questions/"+examKey).then((res)=>{
+            setExamQuestions(res.data);
+        }).catch(err=>{
+            console.log(err);
+        });
+    }, []);
 
     return(
         <Container component="main" maxWidth="xl">
@@ -23,13 +38,13 @@ export default function Ispit() {
                 <Typography variant='h3'>
                     Pitanja:
                 </Typography>
-                {pitanja.map((item, index)=>{
+                {examQuestions.map((item, index)=>{
                         return(
-                            <Box sx={{
+                            <Box key={item._id} sx={{
                                 padding: "2",
                                 width: "100%"
                             }}>
-                                <CardPitanje text={item.text} imageUrl={item.imageUrl} index={index+1}/>
+                                <CardPitanje text={item.text} imageUrl="" index={index+1}/>
                                 <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
                                  <Odgovor/>
                                 </Collapse>

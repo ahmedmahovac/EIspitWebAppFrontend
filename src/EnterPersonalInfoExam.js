@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link as LinkRouter} from 'react-router-dom';
+import {Link as LinkRouter, useSearchParams} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import SchoolIcon from '@mui/icons-material/School';
 
@@ -27,6 +27,14 @@ export default function EnterPersonalInfoExam() {
 
 
   const navigate = useNavigate();
+
+  const[searchParams, setSearchParams] = useSearchParams();
+
+
+  React.useEffect(()=>{
+    console.log(searchParams.get("examKey"));
+  },[]);
+
 
   const formik = useFormik({
     initialValues: {

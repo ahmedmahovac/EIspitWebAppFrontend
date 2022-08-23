@@ -28,7 +28,7 @@ export default function CardPitanje(props) {
                 <CardMedia
                 onError={handleBrokenImage}
                 component="img"
-                alt="Tekst pitanja"
+                alt="Pitanje"
                 image={props.imageUrl}
                 sx={{
                     padding:2

@@ -60,6 +60,10 @@ function App() {
                   </Route>
 
                   <Route exact path='examAccess' element={<ExamAccess/>}>
+      
+                  </Route>
+
+                  <Route exact path='examAccessEnterPersonalInfo' element={<EnterPersonalInfoExam/>}>
 
                   </Route>
 
@@ -67,13 +71,12 @@ function App() {
                     
                     </Route>
 
+                    <Route exact path='testRutaZaUploadSlika' element={<UploadImagesBasic/>}/>
+
                     <Route exact path='examInsight' element={<ExamInsight/>}>
                     
                     </Route>
 
-                  <Route exact path='examAccessEnterPersonalInfo' element={<EnterPersonalInfoExam/>}>
-                    
-                    </Route>
                   <Route exact path='contact' element={<ContactPage/>}>
 
                   </Route>
@@ -81,7 +84,7 @@ function App() {
 
                   </Route>
                 </Route>
-                <Route exact path='exam' element={<ButtonAppBarExam/>}>
+                <Route exact path='exam/:examKey' element={<ButtonAppBarExam/>}>
                   <Route exact path='' element={<Ispit/>}>
                     
                   </Route>
