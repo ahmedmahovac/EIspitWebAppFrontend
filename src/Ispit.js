@@ -16,10 +16,30 @@ export default function Ispit() {
 
     const {examKey} = useParams();
 
+    const [imageSrcTest, setImageSrcTest] = useState("");
+
     useEffect(()=>{
         console.log(examKey)
         axios.get("/student/questions/"+examKey).then((res)=>{
-            setExamQuestions(res.data);
+            // dohvati sve slike za svako pitanje
+            const questions = res.data;
+            questions.map((question, index) => { // moram dohvatit jedno pa drugo, da bih znao kad sam zavrsio sa kompletnim ucitavanjem pitanja
+                axios.get("/student/imageQuestion/"+question._id).then(res => {
+                    console.log(res);
+                    setImageSrcTest(res.data);
+                    // stavi u question ovo sto je doslo kao rez
+                    axios.get("student/pdfQuestion/"+question._id).then(res => {
+                        console.log(res);
+                        // stavi u question ovo sto je doslo kao rez
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            });
+            // dohvati pdf za svako pitanje
+            setExamQuestions(questions);
         }).catch(err=>{
             console.log(err);
         });
@@ -52,6 +72,8 @@ export default function Ispit() {
                         );
                 })}
             </Box>
+            <Typography>Test</Typography>
+            <img src={imageSrcTest}></img>
         </Container>
     );
 
