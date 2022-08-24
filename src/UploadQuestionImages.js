@@ -1,37 +1,33 @@
 import { Button } from '@mui/material';
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Zoom from 'react-medium-image-zoom';
 import styles from './UploadImages.module.css';
-
+import { NewExamContext } from './NewExam';
 
 const UploadImageFromMobilePage = () => {
-    const [selectedImages, setSelectedImages] = useState([]);
+   // const [selectedImages, setSelectedImages] = useState([]);
   
 
-    const [selectedFilesForUpload, setSelectedFilesForUpload] = useState([]);
+    const {selectedFilesForUpload, setSelectedFilesForUpload} = useContext(NewExamContext);
 
     const onSelectFile = (event) => {
       const selectedFiles = event.target.files;
   
-      const image = URL.createObjectURL(selectedFiles[0]);
+     // const image = URL.createObjectURL(selectedFiles[0]);
  
-      setSelectedImages((previousImages) => previousImages.concat(image));
+     // setSelectedImages((previousImages) => previousImages.concat(image));
       setSelectedFilesForUpload(selectedFilesForUpload.concat(selectedFiles[0]));
       // FOR BUG IN CHROME
       event.target.value = "";
     };
 
 
-    useEffect(()=>{
-      console.log("uso");
-      console.log(selectedFilesForUpload.length);
-    }, [selectedFilesForUpload]);
   
-    function deleteHandler(image) {
-      setSelectedImages(selectedImages.filter((e) => e !== image));
-    //  setSelectedFiles(selectedFiles.filter((e) => e !== image));
-      URL.revokeObjectURL(image);
+    function deleteHandler(imageFile, image) {
+     // setSelectedImages(selectedImages.filter((e) => e !== image));
+     setSelectedFilesForUpload(selectedFilesForUpload.filter((e) => e !== imageFile));
+     URL.revokeObjectURL(image);
     }
   
     const handleUploadImages = (event) => {
@@ -50,6 +46,7 @@ const UploadImageFromMobilePage = () => {
         console.log(err);
       });
     }
+
 
     return (
       <section>
@@ -70,26 +67,26 @@ const UploadImageFromMobilePage = () => {
   
         <input className={styles.inputOdgovor} type="file" multiple />
   
-        {selectedImages.length > 0 &&
-          (selectedImages.length > 10 ? (
+        {selectedFilesForUpload.length > 0 &&
+          (selectedFilesForUpload.length > 10 ? (
             <p className={styles.error}>
               You can't upload more than 10 images! <br />
               <span>
-                please delete <b> {selectedImages.length - 10} </b> of them{" "}
+                please delete <b> {selectedFilesForUpload.length - 10} </b> of them{" "}
               </span>
             </p>
           ) : (null))}
   
         <div className={styles.images}>
-          {selectedImages &&
-            selectedImages.map((image, index) => {
-              console.log(image)
+          {selectedFilesForUpload &&
+            selectedFilesForUpload.map((imageFile, index) => {
+              const image = URL.createObjectURL(imageFile);
               return (
                 <div key={image} className={styles.image}>
                   <Zoom>
                      <img src={image} height="200" alt="upload" />
                   </Zoom>
-                  <button onClick={() => deleteHandler(image)}>
+                  <button onClick={() => deleteHandler(imageFile, image)}>
                     delete image
                   </button>
                   <p>{index + 1}</p>
@@ -97,9 +94,6 @@ const UploadImageFromMobilePage = () => {
               );
             })}
         </div>
-        <Button variant='contained' color='primary' onClick={handleUploadImages}>
-          Upload images
-        </Button>
       </section>
     );
   };

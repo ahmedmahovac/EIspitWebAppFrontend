@@ -16,7 +16,7 @@ import ExamAccess from './ExamAccess';
 import ContactPage from './ContactPage';
 import Ispit from './Ispit';
 import ExamsList from './ExamsList';
-import UploadImagesBasic from './UploadImagesBasic';
+import UploadQuestionImages from './UploadQuestionImages';
 import NewExam from './NewExam.js';
 import Exam from './Exam';
 import InsightAccess from './InsightAccess';
@@ -71,7 +71,7 @@ function App() {
                     
                     </Route>
 
-                    <Route exact path='testRutaZaUploadSlika' element={<UploadImagesBasic/>}/>
+                    <Route exact path='testRutaZaUploadSlika' element={<UploadQuestionImages/>}/>
 
                     <Route exact path='examInsight' element={<ExamInsight/>}>
                     

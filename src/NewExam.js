@@ -1,11 +1,11 @@
-import { Component, useContext, useEffect, useState } from 'react';
+import { Component, createContext, useContext, useEffect, useState } from 'react';
 import { Box, Container, Typography, Tooltip, Button, IconButton, TextField, Paper, FormControlLabel, Checkbox, FormGroup, FormControl, FormLabel, FormHelperText, TextareaAutosize, Input} from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
-import UploadImagesBasic from './UploadImagesBasic';
+import UploadQuestionImages from './UploadQuestionImages';
 import PitanjePreview from './PitanjePreview';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
@@ -18,8 +18,13 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { TeacherContext } from './ButtonAppBarTeacher';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { LoadingButton } from '@mui/lab';
+
+export const NewExamContext = createContext();
+
 
 export default function NewExam() {
+
 
     const {exams, setExams} = useContext(TeacherContext);
 
@@ -30,6 +35,9 @@ export default function NewExam() {
     const [questions, setQuestions] = useState([]);
     const  [questionTitle, setQuestionTitle] = useState("");
     const  [questionText, setQuestionText] = useState("");
+
+
+    const [selectedImagesForUpload, setSelectedImagesForUpload] = useState([]);
 
     const [addingQuestionActive, setAddingQuestionActive] = useState(false);
     const [addingTeacherActive, setAddingTeacherActive] = useState(false);
@@ -43,10 +51,14 @@ export default function NewExam() {
     const [pdfFile, setPdfFile] = useState(null);
     const [errorPdfFile, setErrorPdfFile] = useState("");
 
+
+    const [addExamSent, setAddExamSent] = useState(false);
+    
     const handleAddQuestion = (event) => {
         setAddingQuestionActive(true);
-
     }
+
+
 
 
     const handleAddTeacher = (event) => {
@@ -81,7 +93,7 @@ export default function NewExam() {
 
     const handleQuestionAdded = (event) => {
         // ovdje vec predstavi sliku i pdf u pogodnom formatu za spremanju u bazu
-        setQuestions([...questions, {title: questionTitle, questionText: questionText, pdfIncluded: (pdfFile!=null ? true : false), imagesIncluded: checkboxState.checkboxImages}]);
+        setQuestions([...questions, {title: questionTitle, questionText: questionText, pdfIncluded: (pdfFile!=null ? true : false), images: selectedImagesForUpload}]);
         // ovo sve skupa moze u neku fju koja se npr zove resetuj unesene podatke za dodavanje pitanja
         setAddingQuestionActive(false);
         setCheckBoxState({checkboxText: false, checkboxImages: false,checkboxPdf: false});
@@ -89,6 +101,7 @@ export default function NewExam() {
         setErrorPdfFile("");
         setQuestionText("");
         setQuestionTitle("");
+        setSelectedImagesForUpload([]); // nema potrebe da vise pamtimo slike za ovo pitanje, vec je spremljeno lokalno
     }
 
 
@@ -108,15 +121,64 @@ export default function NewExam() {
         }
     }
 
+    /*
     const handleAddExam = (event) => {
         // dodaj exam u bazu
-        axios.post("/teacher/addExam", {title: examTitle, questions: questions}).then((res)=>{
+        const formData = new FormData();
+
+        selectedImagesForUpload.map((item)=>{
+            formData.append("image", item);
+          });
+        axios.post("/teacher/addExam", {title: examTitle, questions: questions}, {headers: {"Content-Type": "multipart/form-data"}}).then((res)=>{
             // treba ponovo trazit sve exams, zato je bolje u examslist na mountu to radit jer bih sad ovdje samo mogao redirectat na tu komponentu i automatski bi se ponovo dobili svjezi podaci
             // mada mogu jednostavno dodati jedan button "refresh" na examsList, i to ima smisla
             // mogu i nakon kreiranja vratiti kreirani exam i ovdje postavit state. To je vjerovatno najlakse. Al pozeljno bi bilo dodat i refresh btn
             let exam = res.data;
             setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
             navigate("../exams");
+        }).catch(err=>{
+            alert(err);
+        });
+    
+        setExams([...exams, {
+            id: Math.random(),
+            examTitle: examTitle, // i po ovome sortirati ima smisla
+            createdTime: new Date("2020-05-12T23:50:21.817Z"), // po ovome sortirati
+            examKey: "noviIspit",
+            open: false
+        }]);
+    }
+    */
+
+
+    const handleAddExam = (event) => {
+        setAddExamSent(true);
+        // dodaj exam u bazu
+        axios.post("/teacher/addExam", {title: examTitle,}).then((res)=>{
+            let exam = res.data;
+            questions.map((question, index)=>{
+                axios.post("/teacher/question", {title: question.title, text: questionText, examId: exam._id}).then(res=>{ // da ne saljem bezveze ostale vrijednosti
+                    let createdQuestion = res.data;
+                    // sad imam id pitanja i mogu uputit zahtjev za spremanje slika pitanja
+                    const formData = new FormData();
+                    question.images.map((item)=>{
+                        formData.append("image", item);
+                    });
+                    formData.append("questionId", createdQuestion._id);
+                    axios.post("/teacher/questionImages", formData, {headers: {"Content-Type": "multipart/form-data"}}).then(res=>{
+                        console.log(res.data);
+                        if(index===questions.length-1) { // ovo je znak da je svako dodavanje uspjesno proslo
+                            setAddExamSent(false);
+                            setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
+                            navigate("../exams");
+                        }
+                    }).catch(err => {
+                        alert.err(err);
+                    });
+                }).catch(err => {
+                    alert(err);
+                }); 
+            });
         }).catch(err=>{
             alert(err);
         });
@@ -131,13 +193,17 @@ export default function NewExam() {
         */
     }
 
+
+
     const handleExamTitle = (event) => {
         setExamTitle(event.currentTarget.value);
     }
 
 
+    
 
     return(
+        <NewExamContext.Provider value={{selectedFilesForUpload: selectedImagesForUpload, setSelectedFilesForUpload: setSelectedImagesForUpload}}>
             <Container component="main" maxWidth="xl">
                 <Box sx={{
                     marginTop: 15,
@@ -267,7 +333,7 @@ export default function NewExam() {
                                 {checkboxState.checkboxImages&&(
                                     <Paper elevation={2} sx={{m: 1}}>
                                         <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>Upload images as formulation of question.</Typography>
-                                        <UploadImagesBasic/>
+                                        <UploadQuestionImages/>
                                     </Paper>
                                 )}
                                 {checkboxState.checkboxPdf ? 
@@ -376,10 +442,11 @@ export default function NewExam() {
                         justifyContent: "center",
                         alignItems: "center",
                     }}>
-                        <Button onClick={handleAddExam} size='large' variant='contained' sx={{backgroundColor: "#22c1c3"}}>ADD EXAM</Button>
+                        <LoadingButton loading={addExamSent} onClick={handleAddExam} size='large' variant='contained' sx={{backgroundColor: "#22c1c3"}}>ADD EXAM</LoadingButton>
                     </Paper>
                 </Box>
             </Container>
+        </NewExamContext.Provider>
     );
 }
 
