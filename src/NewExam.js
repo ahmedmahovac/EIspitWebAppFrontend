@@ -50,7 +50,7 @@ export default function NewExam() {
 
     const [pdfFile, setPdfFile] = useState(null);
     const [errorPdfFile, setErrorPdfFile] = useState("");
-
+    const [pdfFileObjectUrl, setPdfFileObjectUrl] = useState(null);
 
     const [addExamSent, setAddExamSent] = useState(false);
     
@@ -93,11 +93,12 @@ export default function NewExam() {
 
     const handleQuestionAdded = (event) => {
         // ovdje vec predstavi sliku i pdf u pogodnom formatu za spremanju u bazu
-        setQuestions([...questions, {title: questionTitle, questionText: questionText, pdfIncluded: (pdfFile!=null ? true : false), images: selectedImagesForUpload}]);
+        setQuestions([...questions, {title: questionTitle, questionText: questionText, pdf: pdfFile, images: selectedImagesForUpload}]);
         // ovo sve skupa moze u neku fju koja se npr zove resetuj unesene podatke za dodavanje pitanja
         setAddingQuestionActive(false);
         setCheckBoxState({checkboxText: false, checkboxImages: false,checkboxPdf: false});
         setPdfFile(null);
+        setPdfFileObjectUrl(null);
         setErrorPdfFile("");
         setQuestionText("");
         setQuestionTitle("");
@@ -109,17 +110,21 @@ export default function NewExam() {
     const onFileSelected = (event) => {
         const selectedFile = event.target.files[0];
         if(selectedFile && selectedFile.type==="application/pdf") {
-            let reader = new FileReader();
-            reader.readAsDataURL(selectedFile);
+            //let reader = new FileReader();
+            setPdfFile(selectedFile);
+            setPdfFileObjectUrl(URL.createObjectURL(selectedFile));
+            /*reader.readAsDataURL(selectedFile);
             reader.onloadend = (e)=>{
                 setErrorPdfFile("");
                 setPdfFile(e.target.result);
             }
+            */
         }
         else {
             setErrorPdfFile("Please select PDF file only.");
         }
     }
+
 
     /*
     const handleAddExam = (event) => {
@@ -152,28 +157,32 @@ export default function NewExam() {
 
 
     const handleAddExam = (event) => {
-        setAddExamSent(true);
         // dodaj exam u bazu
         axios.post("/teacher/addExam", {title: examTitle,}).then((res)=>{
             let exam = res.data;
+            setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
+            navigate("../exams");
             questions.map((question, index)=>{
                 axios.post("/teacher/question", {title: question.title, text: questionText, examId: exam._id}).then(res=>{ // da ne saljem bezveze ostale vrijednosti
                     let createdQuestion = res.data;
                     // sad imam id pitanja i mogu uputit zahtjev za spremanje slika pitanja
-                    const formData = new FormData();
+                    const formDataImages = new FormData();
                     question.images.map((item)=>{
-                        formData.append("image", item);
+                        formDataImages.append("image", item);
                     });
-                    formData.append("questionId", createdQuestion._id);
-                    axios.post("/teacher/questionImages", formData, {headers: {"Content-Type": "multipart/form-data"}}).then(res=>{
+                    formDataImages.append("questionId", createdQuestion._id);
+                    axios.post("/teacher/questionImages", formDataImages, {headers: {"Content-Type": "multipart/form-data"}}).then(res=>{
                         console.log(res.data);
-                        if(index===questions.length-1) { // ovo je znak da je svako dodavanje uspjesno proslo
-                            setAddExamSent(false);
-                            setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
-                            navigate("../exams");
-                        }
                     }).catch(err => {
                         alert.err(err);
+                    });
+                    const formDataPdf = new FormData();
+                    formDataPdf.append("pdf", question.pdf);
+                    formDataPdf.append("questionId", createdQuestion._id);
+                    axios.post("/teacher/questionPdf", formDataPdf, {headers: {"Content-Type": "multipart/form-data"}}).then(res=>{
+                        console.log(res.data);
+                    }).catch(err => {
+                        console.log(err);
                     });
                 }).catch(err => {
                     alert(err);
@@ -345,7 +354,7 @@ export default function NewExam() {
                                 <Typography variant='subtitle1' sx={{fontWeight: "bold", m: 2}}>View uploaded pdf</Typography>
                                 {pdfFile&&(
                                     <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js">
-                                        <Viewer plugins={[defaultLayoutPluginInstance]} fileUrl={pdfFile} />;
+                                        <Viewer plugins={[defaultLayoutPluginInstance]} fileUrl={pdfFileObjectUrl} />;
                                     </Worker>
                                 )}
                                 {!pdfFile&&(
