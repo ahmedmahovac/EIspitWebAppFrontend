@@ -10,91 +10,62 @@ import UndoIcon from '@mui/icons-material/Undo';
 import HelpIcon from '@mui/icons-material/Help';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
+import { Buffer } from 'buffer';
 
 export default function StudentInformation() {
 
     const {students, selectedIndex} = useContext(ExamContext);
     const [open, setOpen] = useState(false);
-    const itemData = [ // ovdje ce se stavljati images za trenutno odabrano pitanje
-      {
-        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Burger',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Camera',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Coffee',
-        cols: 2,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        title: 'Hats',
-        cols: 2,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        title: 'Honey',
-        author: '@arwinneil',
-        rows: 2,
-        cols: 2,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        title: 'Basketball',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        title: 'Mushrooms',
-        rows: 2,
-        cols: 2,
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        title: 'Tomato basil',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-        title: 'Sea star',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-        title: 'Bike',
-        cols: 2,
-      },
-    ];
+    const [answerImages, setAnswerImages] = useState([]); // ovdje ce se stavljati images za trenutno odabrano pitanje
+     
 
-      const [includeComment, setIncludeComment] = useState(itemData.map(()=>{return false;}));
+  
+
+   
+
+      const [answers, setAnswers] = useState([]);
+
+      const [includeComment, setIncludeComment] = useState([]);
 
       const handleChangeIncludeComment = (event) => {
         setIncludeComment(includeComment.map(()=>event.target.checked));
       }
 
-      const [annotation, setAnnotation] = useState(itemData.map((item,index)=>{return {};}));
-      const [annotations, setAnnotations] = useState(itemData.map((item,index)=>{return [];}));
+      const [annotation, setAnnotation] = useState();
+      const [annotations, setAnnotations] = useState();
     
+      useEffect(()=>{
+        setAnnotation(answerImages.map((item,index)=>{return {};}));
+        setAnnotations(answerImages.map((item,index)=>{return [];}));
+      },[answerImages]);
 
-      const [disableAnnotations, setDisableAnnotations] = useState(itemData.map(()=>true));
+      const [disableAnnotations, setDisableAnnotations] = useState(answerImages.map(()=>true));
 
       const [clickedImage, setClickedImage] = useState(null);
 
-      const [selectedQuestion, setSelectedQuestion] = useState(0);
+      const [selectedQuestion, setSelectedQuestion] = useState("");
 
       const handleSelectQuestion = (event) => {
         // ovdje stavis setItemData na slike samo poslane za izabrano pitanje
-        setSelectedQuestion(event.target.value);
+        const index = event.target.value;
+        const answer = answers[index];
+        axios.get("/student/imageAnswers/"+answer._id).then(res => {
+          const imageAnswers = res.data;
+          imageAnswers.map((imageAnswer, index)=>{
+            axios.get("/student/imageAnswer/"+imageAnswer._id, {responseType: 'arraybuffer'}).then(res => {
+              const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+              setAnswerImages((prevImages)=> {
+                return [...prevImages, {title: "", img: dataImage}];
+              });
+            }).catch(err => {
+              console.log(err);
+            });
+          });
+        }).catch(err => {
+          console.log(err);
+        });
+        setSelectedQuestion(index);
       }
 
       const onChange = (ann) => {
@@ -130,24 +101,19 @@ export default function StudentInformation() {
       }
 
 
+
+    
+
+      
       useEffect(()=>{
-
-      }, [clickedImage]);
-
-      useEffect(()=>{
-        console.log("promijenjen annotations niz");
-        annotation.map((item)=>{
-          console.log(item.length);
-        })  
-      }, [annotations]);
-
-
-      useEffect(()=>{
-        console.log("promijenjen annotation niz");
-        annotation.map((item)=>{
-          console.log(item);
-        })       
-      }, [annotation]);
+        const examTakeId = students[selectedIndex]._id;
+        axios.get("student/answers/"+examTakeId).then((res)=>{
+          console.log(res.data);
+          setAnswers(res.data);
+        }).catch(err => {
+          console.log(err);
+        });
+      }, []);
 
     return(
         <Box>
@@ -184,10 +150,9 @@ export default function StudentInformation() {
                   onChange={handleSelectQuestion}
                   label="Question"
                 >
-                  <MenuItem value={1}>1</MenuItem>
-                  <MenuItem value={2}>2</MenuItem>
-                  <MenuItem value={3}>3</MenuItem>
-                  <MenuItem value={4}>4</MenuItem>
+                  {answers.map((answer,index)=>{
+                    return <MenuItem key={answer._id} value={index}>{index+1}</MenuItem>
+                  })}
                 </Select>
                 <FormHelperText>Select question for answers presence</FormHelperText>
               </FormControl>
@@ -211,7 +176,7 @@ export default function StudentInformation() {
                     <TextField sx={{padding: 1}} label="Comment here" multiline fullWidth></TextField>
                   </Collapse>
                 <ImageList sx={{ width: "100%"}} cols={1}>
-                    {itemData.map((item,index) => (
+                    {answerImages.map((item,index) => (
                             <ImageListItem key={item.img}>
                             <Annotation
                                 src={item.img}

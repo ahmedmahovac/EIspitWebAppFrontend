@@ -53,7 +53,7 @@ const UploadImageFromMobilePage = () => {
         <label className={styles.uploadImageLabel}>
           + Add Images
           <br />
-          <span>up to 10 images</span>
+          <span>up to 1 images</span>
           <input
             className={styles.inputOdgovor}
             type="file"
@@ -68,11 +68,11 @@ const UploadImageFromMobilePage = () => {
         <input className={styles.inputOdgovor} type="file" multiple />
   
         {selectedFilesForUpload.length > 0 &&
-          (selectedFilesForUpload.length > 10 ? (
+          (selectedFilesForUpload.length > 1 ? (
             <p className={styles.error}>
-              You can't upload more than 10 images! <br />
+              You can't upload more than 1 images! <br />
               <span>
-                please delete <b> {selectedFilesForUpload.length - 10} </b> of them{" "}
+                please delete <b> {selectedFilesForUpload.length - 1} </b> of them{" "}
               </span>
             </p>
           ) : (null))}

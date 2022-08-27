@@ -11,6 +11,7 @@ export default function CardPitanje(props) {
     const handleBrokenImage = (event) => {
         event.target.style.display = "none";
     }
+    console.log(props);
     return (
         <Card sx={{width: "100%", mt: 5, backgroundColor: "#F9FDFF"}}>
         <CardActionArea>
@@ -24,17 +25,9 @@ export default function CardPitanje(props) {
                 {props.text}
             </Typography>
             </CardContent>
-            <Grid container spacing={2}>
-                {props.imageUrls.map((image, index)=>{
-                    return (
-                        <Grid item>
-                            <Zoom>
-                                <img height="100%" src={image}/> 
-                            </Zoom>
-                        </Grid> 
-                    );
-                })}
-            </Grid>  
+            <Zoom>
+                <img src={props.imageUrl} width="100%"/> 
+            </Zoom>
         </CardActionArea>
         </Card>
     );

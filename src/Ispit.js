@@ -30,31 +30,44 @@ export default function Ispit() {
     }, [examQuestions]);
 
 
+
    
 
     const getQuestions= ()=>{
         axios.get("/student/questions/"+examKey).then((res)=>{
-            let questionsToBeAdded = [];
             // dohvati sve slike za svako pitanje
             const questions = res.data;
             console.log(questions);
             questions.map((question, indexQuestion) => { // moram dohvatit jedno pa drugo, da bih znao kad sam zavrsio sa kompletnim ucitavanjem pitanja
-                    axios.get("student/pdfQuestion/"+question._id).then(res => {
+                    axios.get("/student/pdfQuestion/"+question._id).then(res => {
                         let dataPdf = "";
                         if(question.pdfIncluded) {
                             dataPdf = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
                         }
+                        axios.get("/student/imageQuestionTemporary/" + question._id, {responseType: 'arraybuffer'}).then(res => {
+                            let dataImage = "";
+                            if(question.imagesIncluded){
+                                dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+                            }
+                            setExamQuestions((prevQuestions)=>{
+                                return [...prevQuestions, {_id: question._id, title: question.title, text: question.text, _examId: question._examId, pdfIncluded: question.pdfIncluded, imagesIncluded: question.imagesIncluded, image: dataImage, pdf: dataPdf}]
+                            });
+                           // setExamQuestions(examQuestions.concat());
+                        }).catch(err =>{
+                            console.log(err);
+                        });
+                        /*
                        axios.get("/student/imageQuestions/"+question._id).then(res => {
                         const imageQuestions = res.data;
                         let dataImages = [];
-                        /*
+    
                         if(imageQuestions.length===0) {
                             questionsToBeAdded = questionsToBeAdded.concat({_id: question._id, title: question.title, text: question.text, _examId: question._examId, pdfIncluded: question.pdfIncluded, imagesIncluded: question.imagesIncluded, images: dataImages, pdf: dataPdf});
                             if(indexQuestion===questions.length-1){
                                 setExamQuestions(questionsToBeAdded);
                             }
                         }
-                        */
+                        
                        
                         imageQuestions.map((imageQuestion, index)=>{
                             axios.get("/student/imageQuestion/"+imageQuestion._id, {responseType: 'arraybuffer'}).then(res => {
@@ -69,8 +82,9 @@ export default function Ispit() {
                              });
                             });
                             }).catch(err=>{
-                                console.log(err);
+                                console.log(err)
                             });
+                            */
                     }).catch(err => {
                         console.log(err);
                     });
@@ -110,7 +124,7 @@ export default function Ispit() {
                                             padding: "2",
                                             width: "100%"
                                         }}>
-                                            <CardPitanje title={item.title} text={item.text} imageUrls={item.images} />
+                                            <CardPitanje title={item.title} text={item.text} imageUrl={item.image} />
                                             <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
                                             <Odgovor question={item} />
                                             </Collapse>

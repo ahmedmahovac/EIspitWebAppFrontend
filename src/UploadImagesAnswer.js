@@ -65,7 +65,7 @@ export default function UploadImagesExtra() {
                             // svi su uspjesno appendovani, sada mogu poslat formData
                             formData.append("answerId", res.data.answerId);
                             axios.post("/student/answerImages",formData,{headers: {"Content-Type": "multipart/form-data"}}).then(res => {
-                                console.log(res);
+                                setSelectedImages([]);
                             }).catch(err => {
                                 console.log(err);
                             });
