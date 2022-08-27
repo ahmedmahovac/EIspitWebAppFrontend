@@ -154,7 +154,7 @@ export default function ExamsList() {
         }
 
         const onClickHandlerViewResults = (event) => {
-            navigate("../exams/exam");
+            navigate("../exams/"+event.currentTarget.id);
         }
 
 

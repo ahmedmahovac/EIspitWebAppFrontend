@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions} from '@mui/material';
+import { Button, CardActionArea, CardActions, Grid} from '@mui/material';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css'
 
@@ -18,23 +18,23 @@ export default function CardPitanje(props) {
             <Typography gutterBottom variant="h3" component="div" sx={{
                 color: "#1976d2"
             }}>
-                Pitanje {props.index}
+                {props.title}
             </Typography>
             <Typography variant="body1" color="text.secondary">
                 {props.text}
             </Typography>
             </CardContent>
-            <Zoom>
-                <CardMedia
-                onError={handleBrokenImage}
-                component="img"
-                alt="Pitanje"
-                image={props.imageUrl}
-                sx={{
-                    padding:2
-                }}
-                />
-            </Zoom>    
+            <Grid container spacing={2}>
+                {props.imageUrls.map((image, index)=>{
+                    return (
+                        <Grid item>
+                            <Zoom>
+                                <img height="100%" src={image}/> 
+                            </Zoom>
+                        </Grid> 
+                    );
+                })}
+            </Grid>  
         </CardActionArea>
         </Card>
     );

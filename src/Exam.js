@@ -1,11 +1,12 @@
 import { Box, Button, Card, CardContent, CardMedia, Collapse, Container, FormControlLabel, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Switch, TextField, Typography } from '@mui/material';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { Dimensions } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
 import axios from 'axios';
 import StudentInformation from './StudentInformation';
 import TimerIcon from '@mui/icons-material/Timer';
 import Advantagecard from './Advantagecard';
+import { useParams } from 'react-router-dom';
 
 export const ExamContext = createContext();
 
@@ -26,11 +27,7 @@ const modalStyle = {
 export default function Exam() {
 
 
-    const [students, setStudents] = useState([{firstName: "ahmed", lastName: "mahovac", email: "amahovac1@etf.unsa.ba", index: "18735"},
-    {firstName: "ahmed2", lastName: "mahovac", email: "amahovac1@etf.unsa.ba", index: "18735"},
-    {firstName: "ahmed3", lastName: "mahovac", email: "amahovac1@etf.unsa.ba", index: "18735"},
-    {firstName: "ahmed4", lastName: "mahovac", email: "amahovac1@etf.unsa.ba", index: "18735"},
-    {firstName: "ahmed5", lastName: "mahovac", email: "amahovac1@etf.unsa.ba", index: "18735"}]); 
+    const [students, setStudents] = useState([]); 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [searchNameValue, setSearchNameValue] = useState("");
 
@@ -38,8 +35,16 @@ export default function Exam() {
         setSelectedIndex(index);
     }
 
+    const {examId} = useParams();
 
-    
+    useEffect(()=>{
+        axios.get("/teacher/examTakes/"+examId).then(res => {
+            setStudents(res.data);
+        }).catch(err => {
+            console.log(err);
+        });
+    }, []);
+
 
 
     const [showMonitoringOptions, setShowMonitoringOptions] = useState(false);
@@ -72,7 +77,7 @@ export default function Exam() {
                     <Paper sx={{
                         
                     }}>
-                        <TextField autoFocus value={searchNameValue} label="search name" sx={{m: 1, padding: "5px"}}></TextField>
+                        <TextField autoFocus value={searchNameValue} label="search name (ne radi jos)" sx={{m: 1, padding: "5px"}}></TextField>
                         <List component="nav" aria-label="students list">
                             {students.map((item, index)=>{
                                 return(
@@ -83,7 +88,7 @@ export default function Exam() {
                                     <ListItemIcon>
                                         <SchoolIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="Student" />
+                                    <ListItemText primary={item.firstName + " " + item.lastName} />
                                 </ListItemButton>
                                 );  
                             })}
@@ -95,7 +100,7 @@ export default function Exam() {
                         padding: 2,
                         width: 150
                     }}>
-                        <StudentInformation/>
+                        {students.length!==0 ? <StudentInformation/> : null}
                     </Paper>
                 </Box>
                 <Paper sx={{

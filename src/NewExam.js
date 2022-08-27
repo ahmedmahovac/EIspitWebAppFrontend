@@ -111,7 +111,7 @@ export default function NewExam() {
         const selectedFile = event.target.files[0];
         if(selectedFile && selectedFile.type==="application/pdf") {
             //let reader = new FileReader();
-            setPdfFile(selectedFile);
+            setPdfFile(selectedFile); 
             setPdfFileObjectUrl(URL.createObjectURL(selectedFile));
             /*reader.readAsDataURL(selectedFile);
             reader.onloadend = (e)=>{
@@ -163,8 +163,9 @@ export default function NewExam() {
             setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
             navigate("../exams");
             questions.map((question, index)=>{
-                axios.post("/teacher/question", {title: question.title, text: questionText, examId: exam._id}).then(res=>{ // da ne saljem bezveze ostale vrijednosti
+                axios.post("/teacher/question", {title: question.title, text: question.questionText, examId: exam._id, pdfIncluded: question.pdf!==null, imagesIncluded: question.images.length!==0}).then(res=>{ // da ne saljem bezveze ostale vrijednosti
                     let createdQuestion = res.data;
+                    console.log(createdQuestion.title);
                     // sad imam id pitanja i mogu uputit zahtjev za spremanje slika pitanja
                     const formDataImages = new FormData();
                     question.images.map((item)=>{
@@ -176,6 +177,7 @@ export default function NewExam() {
                     }).catch(err => {
                         alert.err(err);
                     });
+                    if(question.pdf!=null) {
                     const formDataPdf = new FormData();
                     formDataPdf.append("pdf", question.pdf);
                     formDataPdf.append("questionId", createdQuestion._id);
@@ -184,6 +186,7 @@ export default function NewExam() {
                     }).catch(err => {
                         console.log(err);
                     });
+                }
                 }).catch(err => {
                     alert(err);
                 }); 

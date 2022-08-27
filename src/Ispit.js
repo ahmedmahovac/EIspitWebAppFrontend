@@ -1,10 +1,14 @@
-import { Box, Collapse, Container, CssBaseline, Typography } from '@mui/material';
-import { Component, useEffect, useState } from 'react';
+import { Box, Collapse, Container, CssBaseline, IconButton, Typography } from '@mui/material';
+import { Component, createContext, useEffect, useState } from 'react';
 import CardPitanje from './CardPitanje';
 import pitanja from './Pitanja.js';
 import Odgovor from './Odgovor.js';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Buffer } from 'buffer';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 
 export default function Ispit() {
@@ -16,65 +20,106 @@ export default function Ispit() {
 
     const {examKey} = useParams();
 
-    const [imageSrcTest, setImageSrcTest] = useState("");
+    const [showQuestions, setShowQuestions] = useState(false);
+
+
+    const [questionsAdded, setQuestionsAdded] = useState(false);
 
     useEffect(()=>{
-        console.log(examKey)
+    console.log(examQuestions);
+    }, [examQuestions]);
+
+
+   
+
+    const getQuestions= ()=>{
         axios.get("/student/questions/"+examKey).then((res)=>{
+            let questionsToBeAdded = [];
             // dohvati sve slike za svako pitanje
             const questions = res.data;
-            questions.map((question, index) => { // moram dohvatit jedno pa drugo, da bih znao kad sam zavrsio sa kompletnim ucitavanjem pitanja
-                axios.get("/student/imageQuestion/"+question._id).then(res => {
-                    console.log(res);
-                    setImageSrcTest(res.data);
-                    // stavi u question ovo sto je doslo kao rez
+            console.log(questions);
+            questions.map((question, indexQuestion) => { // moram dohvatit jedno pa drugo, da bih znao kad sam zavrsio sa kompletnim ucitavanjem pitanja
                     axios.get("student/pdfQuestion/"+question._id).then(res => {
-                        console.log(res);
-                        // stavi u question ovo sto je doslo kao rez
+                        let dataPdf = "";
+                        if(question.pdfIncluded) {
+                            dataPdf = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+                        }
+                       axios.get("/student/imageQuestions/"+question._id).then(res => {
+                        const imageQuestions = res.data;
+                        let dataImages = [];
+                        /*
+                        if(imageQuestions.length===0) {
+                            questionsToBeAdded = questionsToBeAdded.concat({_id: question._id, title: question.title, text: question.text, _examId: question._examId, pdfIncluded: question.pdfIncluded, imagesIncluded: question.imagesIncluded, images: dataImages, pdf: dataPdf});
+                            if(indexQuestion===questions.length-1){
+                                setExamQuestions(questionsToBeAdded);
+                            }
+                        }
+                        */
+                       
+                        imageQuestions.map((imageQuestion, index)=>{
+                            axios.get("/student/imageQuestion/"+imageQuestion._id, {responseType: 'arraybuffer'}).then(res => {
+                                const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+                                dataImages.push(dataImage);
+                                if(index===imageQuestions.length-1){
+                                    questionsToBeAdded = questionsToBeAdded.concat({_id: question._id, title: question.title, text: question.text, _examId: question._examId, pdfIncluded: question.pdfIncluded, imagesIncluded: question.imagesIncluded, images: dataImages, pdf: dataPdf});
+                                    if(indexQuestion===questions.length-1){
+                                        setExamQuestions(questionsToBeAdded);
+                                    }
+                                }
+                             });
+                            });
+                            }).catch(err=>{
+                                console.log(err);
+                            });
                     }).catch(err => {
                         console.log(err);
                     });
-                }).catch(err => {
-                    console.log(err);
-                });
-            });
-            // dohvati pdf za svako pitanje
-            setExamQuestions(questions);
-        }).catch(err=>{
-            console.log(err);
-        });
-    }, []);
-
+    });
+});
+}
     return(
-        <Container component="main" maxWidth="xl">
-            <CssBaseline/>
-            <Box sx={{
-                marginTop: 15,
-                marginBottom: 15,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}>
-                <Typography variant='h3'>
-                    Pitanja:
-                </Typography>
-                {examQuestions.map((item, index)=>{
-                        return(
-                            <Box key={item._id} sx={{
-                                padding: "2",
-                                width: "100%"
-                            }}>
-                                <CardPitanje text={item.text} imageUrl="" index={index+1}/>
-                                <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
-                                 <Odgovor/>
-                                </Collapse>
-                            </Box>
-                        );
-                })}
-            </Box>
-            <Typography>Test</Typography>
-            <img src={imageSrcTest}></img>
-        </Container>
+                <Container component="main" maxWidth="xl">
+                                <IconButton
+                                size="small"
+                                onClick={() => {
+                                    if(!questionsAdded){
+                                        setQuestionsAdded(true);
+                                        getQuestions();
+                                    }
+                                    setShowQuestions(!showQuestions);
+                                }}
+                                >
+                                {showQuestions ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                    <CssBaseline/>
+                    <Collapse in={showQuestions} timeout="auto" unmountOnExit>
+                        <Box sx={{
+                            marginTop: 15,
+                            marginBottom: 15,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center"
+                        }}>
+                            <Typography variant='h3'>
+                                Pitanja:
+                            </Typography>
+                            {
+                                examQuestions.map((item, index)=>{
+                                    return(
+                                        <Box key={item._id} sx={{
+                                            padding: "2",
+                                            width: "100%"
+                                        }}>
+                                            <CardPitanje title={item.title} text={item.text} imageUrls={item.images} />
+                                            <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
+                                            <Odgovor question={item} />
+                                            </Collapse>
+                                        </Box>
+                                    );
+                            })}
+                        </Box>
+                    </Collapse>
+                </Container>
     );
 
 

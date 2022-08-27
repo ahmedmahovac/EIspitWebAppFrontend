@@ -5,10 +5,18 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useState } from 'react';
 import Zoom from 'react-img-zoom';
-export default function Odgovor() {
+import { userContext } from './App';
+import { useContext } from 'react';
+
+export default function Odgovor(props) {
 
     const [open, setOpen] = useState(false);
 
+
+    const {examTakeId} = useContext(userContext);
+
+    const {question} = props;
+  
     return(
         <Box>
             <Typography variant='subtitle1' sx={{
@@ -42,7 +50,7 @@ export default function Odgovor() {
             <Typography variant='subtitle1' sx={{fontWeight: "bold"}}>Show qr code</Typography>
             </Box>
             <Collapse in={open} timeout="auto" unmountOnExit>
-                <QRcode value='http://192.168.0.108:3000/uploadImages'/>
+                <QRcode value={'http://192.168.0.108:3000/uploadImages/'+question._id + "/"+examTakeId}/>
             </Collapse>
         </Box>
     );

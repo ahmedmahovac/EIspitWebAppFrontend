@@ -29,7 +29,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
-import UploadImagesExtra from './UploadImagesExtra';
+import UploadImagesAnswer from './UploadImagesAnswer';
 import { createContext } from 'react';
 import { useState } from 'react';
 import Profile from './Profile';
@@ -45,12 +45,14 @@ function App() {
 
   const [user, setUser] = useState({auth:false, username: ""});
 
+  const  [examTakeId, setExamTakeId] = useState(null);
+
     return (
-      <userContext.Provider value={{user: user, setUser: setUser}}>
+      <userContext.Provider value={{user: user, setUser: setUser, examTakeId: examTakeId, setExamTakeId: setExamTakeId}}>
         <Router>
             <Box>
               <Routes>
-              <Route exact path='uploadImages' element={<UploadImagesExtra/>}/>
+              <Route exact path='uploadImages/:questionId/:examTake' element={<UploadImagesAnswer/>}/>
                 <Route exact path='' element={<ButtonAppBarHome/>}>
                   <Route exact path='login' element={<SignIn/>}>
                     
@@ -84,13 +86,13 @@ function App() {
 
                   </Route>
                 </Route>
-                <Route exact path='exam/:examKey' element={<ButtonAppBarExam/>}>
-                  <Route exact path='' element={<Ispit/>}>
-                    
+                  <Route exact path='exam/:examKey' element={<ButtonAppBarExam/>}>
+                    <Route exact path='' element={<Ispit/>}>
+                      
+                    </Route>
                   </Route>
-                </Route>
                 <Route exact path='teacher' element={<ButtonAppBarTeacher/>}>
-                  <Route exact path='exams/exam' element={<Exam/>}></Route>
+                  <Route exact path='exams/:examId' element={<Exam/>}></Route>
                   <Route exact path='exams' element={<ExamsList/>}>
                   </Route>
                   <Route exact path='newExam' element={<NewExam/>}></Route>

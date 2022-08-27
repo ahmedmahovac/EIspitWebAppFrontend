@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from 'react';
+import { Component, useContext, useEffect, useState } from 'react';
 import { Avatar, Box, Button, Collapse, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { userContext } from './App';
 
 export default function ExamAccess() {
 
@@ -20,7 +21,7 @@ export default function ExamAccess() {
 
     const [validationSuccess, setValidationSuccess] = useState(false);
 
-
+    const {user, setExamTakeId} = useContext(userContext);
 
     const fetchExamAxios = (queryParams) => {
         axios.get("/student/exam?"+queryParams).then((res)=>{
@@ -55,10 +56,13 @@ export default function ExamAccess() {
     const [fetchRequestSent, setFetchRequestSent] = useState(false);
 
     useEffect(()=>{
+        console.log("uso u useeffect");
+        if(user.auth) {
+            alert("You have to logout to gain exam access.");
+            navigate("../teacher/");
+        }
         const examKey = searchParams.get("examKey");
         if(examKey) {
-            console.log("uso");
-            console.log(examKey);
             fetchExamAxios(new URLSearchParams({examKey: examKey}).toString());
         }
     }, []); // prilikom mountanja ako je ucitana QUERY ruta
@@ -82,13 +86,18 @@ export default function ExamAccess() {
           // registruj studenta u bazu
           const examKey = searchParams.get("examKey");
           axios.post("/student/takeExam",{...values, examKey: examKey}).then((res)=>{
-            // dobavi pitanja ako je kreiranje pokusaja rada ispita uspjesno
-            // preusmjeri na rutu za rad ispita
+            // OVDJE dostavi podatak o examtakeu
+            setExamTakeId(res.data._id); // jer kreirani objekat vracam kao respond, ovo mi treba kasnije za upload rjesenja
             setFetchRequestSent(false);
             navigate("../exam/"+examKey);
           }).catch(err => {
-            console.log(err);
-            setInfo("Unexpected error has occured. Please try again.");
+            if(err.response.status===400) {
+                setInfo("Student with given email address has already been registered to this exam.");
+                setFetchRequestSent(false);
+            }
+            else {
+                setInfo("Unexpected error has occured. Please try again.");
+            }
           });
           
         },
