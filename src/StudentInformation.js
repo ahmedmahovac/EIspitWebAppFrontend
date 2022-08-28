@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControl, FormControlLabel, FormHelperText, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ExamContext } from './Exam';
@@ -24,15 +24,24 @@ export default function StudentInformation() {
     const [loadedEverythingNeeded, setLoadedEverythingNeeded] = useState(false);
    
 
-      const [includeComment, setIncludeComment] = useState([]);
+      const [includeComment, setIncludeComment] = useState(false);
+      const [points, setPoints] = useState(0);
+      const [comment, setComment] = useState("");
 
       const handleChangeIncludeComment = (event) => {
-        setIncludeComment(includeComment.map(()=>event.target.checked));
+        console.log(event.target.checked);
+        setIncludeComment(event.target.checked);
       }
 
       const [annotation, setAnnotation] = useState([]);
       const [annotations, setAnnotations] = useState([]);
     
+
+
+      useEffect(()=>{
+        console.log(annotations);
+      }, [annotations]);
+
       useEffect(()=>{
         console.log("uso u useeffect");
         console.log(answerImages);
@@ -43,8 +52,26 @@ export default function StudentInformation() {
 
       const [disableAnnotations, setDisableAnnotations] = useState(answerImages.map(()=>true));
 
+
+
       const [clickedImage, setClickedImage] = useState(null);
 
+
+      const handleReviewSubmit = (event) => {
+        axios.post("/teacher/answerReview/", {comment: comment, points: points, answerId: answers[selectedQuestion]._id}).then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        });
+        answerImages.map((answerImage,index)=>{
+          axios.post("/teacher/imageAnswer",{imageAnswerId: answerImage._id, annotations: annotations[index]}).then(res=>{
+            console.log(res);
+          }).catch(err => {
+            console.log(err);
+          });
+        })
+        
+      }
 
       const handleSelectQuestion = (event) => {
         // prvo resetuj zapamcene slike i anotacije za prethodno pitanja
@@ -175,22 +202,21 @@ export default function StudentInformation() {
                   alignItems: "center"
                 }}>
                   <Tooltip title="Rate answer">
-                      <TextField label="Points" sx={{padding: 1, margin: 1}}></TextField>
+                      <TextField label="Points" value={points} onChange={(event)=>{setPoints(event.target.value)}} sx={{padding: 1, margin: 1}}></TextField>
                     </Tooltip>
                     <FormControlLabel
                     control={
-                    <Checkbox sx={{color: "#22c1c3"}} checked={includeComment[selectedQuestion]} onChange={handleChangeIncludeComment} name="checkboxAdditionalComment" />
+                    <Checkbox sx={{color: "#22c1c3"}} checked={includeComment} onChange={handleChangeIncludeComment} name="checkboxAdditionalComment" />
                     }
                     label="Include general comment on this question's answer"
                     />
                   </Box>
-                  <Collapse in={selectedQuestion !== "" && includeComment[selectedQuestion]} timeout="auto" unmountOnExit>
-                    <TextField sx={{padding: 1}} label="Comment here" multiline fullWidth></TextField>
+                  <Collapse in={selectedQuestion !== "" && includeComment} timeout="auto" unmountOnExit>
+                    <TextField sx={{padding: 1}} label="Comment here" multiline fullWidth value={comment} onChange={(event)=>{setComment(event.target.value)}}></TextField>
                   </Collapse>
                   {(annotations.length === annotation.length) && (answerImages.length === annotation.length) && (selectedQuestion!=="" && selectedQuestion <= answerImages.length) && 
                 <ImageList sx={{ width: "100%"}} cols={1}>
                     {answerImages.map((item,index) => {
-                      console.log(item);
                       return(
                         
                         <ImageListItem key={item._id}>
@@ -242,6 +268,7 @@ export default function StudentInformation() {
                         </ImageListItem>
                       );
                     })} 
+                    <Button variant='contained' onClick={handleReviewSubmit} sx={{m: 1}} >Submit answer review</Button>
                 </ImageList> }
               </Collapse>
           </Box>
