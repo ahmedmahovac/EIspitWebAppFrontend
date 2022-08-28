@@ -34,6 +34,7 @@ export default function Exam() {
     const [searchNameValue, setSearchNameValue] = useState("");
 
 
+    const [selectedQuestion, setSelectedQuestion] = useState("");
 
 
     const handleListItemClick = (index) => {
@@ -41,6 +42,7 @@ export default function Exam() {
         const examTakeId = students[index]._id;
         axios.get("student/answers/"+examTakeId).then((res)=>{
           setAnswers(res.data);
+          setSelectedQuestion("");
         }).catch(err => {
           console.log(err);
         });
@@ -83,7 +85,7 @@ export default function Exam() {
     }, [selectedIndex]);
 
     return(
-        <ExamContext.Provider value={{students, selectedIndex, answers}}>
+        <ExamContext.Provider value={{students, selectedIndex, answers, selectedQuestion, setSelectedQuestion}}>
             <Container maxWidth="xl">
                 <Box sx={{
                     display: "flex",

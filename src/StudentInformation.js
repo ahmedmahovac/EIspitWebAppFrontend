@@ -15,7 +15,7 @@ import { Buffer } from 'buffer';
 
 export default function StudentInformation() {
 
-    const {students, selectedIndex, answers} = useContext(ExamContext);
+    const {students, selectedIndex, answers, selectedQuestion, setSelectedQuestion} = useContext(ExamContext);
     const [open, setOpen] = useState(false);
     const [answerImages, setAnswerImages] = useState([]); // ovdje ce se stavljati images za trenutno odabrano pitanje
      
@@ -45,7 +45,6 @@ export default function StudentInformation() {
 
       const [clickedImage, setClickedImage] = useState(null);
 
-      const [selectedQuestion, setSelectedQuestion] = useState("");
 
       const handleSelectQuestion = (event) => {
         // prvo resetuj zapamcene slike i anotacije za prethodno pitanja
