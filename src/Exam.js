@@ -38,6 +38,12 @@ export default function Exam() {
 
     const handleListItemClick = (index) => {
         setSelectedIndex(index);
+        const examTakeId = students[index]._id;
+        axios.get("student/answers/"+examTakeId).then((res)=>{
+          setAnswers(res.data);
+        }).catch(err => {
+          console.log(err);
+        });
     }
 
     const {examId} = useParams();
@@ -69,8 +75,15 @@ export default function Exam() {
         setOpenSetAdditionalTimeModal(false);
     }
 
+
+    const [answers, setAnswers] = useState([]);
+
+    useEffect(()=>{
+        console.log("uso u useEffect Exama");
+    }, [selectedIndex]);
+
     return(
-        <ExamContext.Provider value={{students, selectedIndex}}>
+        <ExamContext.Provider value={{students, selectedIndex, answers}}>
             <Container maxWidth="xl">
                 <Box sx={{
                     display: "flex",

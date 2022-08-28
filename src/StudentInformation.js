@@ -15,16 +15,14 @@ import { Buffer } from 'buffer';
 
 export default function StudentInformation() {
 
-    const {students, selectedIndex} = useContext(ExamContext);
+    const {students, selectedIndex, answers} = useContext(ExamContext);
     const [open, setOpen] = useState(false);
     const [answerImages, setAnswerImages] = useState([]); // ovdje ce se stavljati images za trenutno odabrano pitanje
      
 
   
-
+    const [loadedEverythingNeeded, setLoadedEverythingNeeded] = useState(false);
    
-
-      const [answers, setAnswers] = useState([]);
 
       const [includeComment, setIncludeComment] = useState([]);
 
@@ -32,12 +30,15 @@ export default function StudentInformation() {
         setIncludeComment(includeComment.map(()=>event.target.checked));
       }
 
-      const [annotation, setAnnotation] = useState();
-      const [annotations, setAnnotations] = useState();
+      const [annotation, setAnnotation] = useState([]);
+      const [annotations, setAnnotations] = useState([]);
     
       useEffect(()=>{
-        setAnnotation(answerImages.map((item,index)=>{return {};}));
-        setAnnotations(answerImages.map((item,index)=>{return [];}));
+        console.log("uso u useeffect");
+        console.log(answerImages);
+        console.log(annotation);
+        console.log(annotations);
+        console.log(selectedQuestion);
       },[answerImages]);
 
       const [disableAnnotations, setDisableAnnotations] = useState(answerImages.map(()=>true));
@@ -47,17 +48,28 @@ export default function StudentInformation() {
       const [selectedQuestion, setSelectedQuestion] = useState("");
 
       const handleSelectQuestion = (event) => {
+        // prvo resetuj zapamcene slike i anotacije za prethodno pitanja
+        setAnswerImages([]);
+        setAnnotation([]);
+        setAnnotations([]);
         // ovdje stavis setItemData na slike samo poslane za izabrano pitanje
         const index = event.target.value;
         const answer = answers[index];
         axios.get("/student/imageAnswers/"+answer._id).then(res => {
           const imageAnswers = res.data;
-          imageAnswers.map((imageAnswer, index)=>{
+          imageAnswers.map((imageAnswer, indexImageAnswer)=>{
             axios.get("/student/imageAnswer/"+imageAnswer._id, {responseType: 'arraybuffer'}).then(res => {
               const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
               setAnswerImages((prevImages)=> {
                 return [...prevImages, {title: "", img: dataImage}];
               });
+              setAnnotation((prev)=>{
+                return [...prev, {}];
+              });
+              setAnnotations((prev)=>{
+                return [...prev, []];
+              });
+              setSelectedQuestion(index);
             }).catch(err => {
               console.log(err);
             });
@@ -65,7 +77,6 @@ export default function StudentInformation() {
         }).catch(err => {
           console.log(err);
         });
-        setSelectedQuestion(index);
       }
 
       const onChange = (ann) => {
@@ -106,13 +117,15 @@ export default function StudentInformation() {
 
       
       useEffect(()=>{
+        /*
+        console.log("uso u studentInformation useEffect [selectedIndex]");
         const examTakeId = students[selectedIndex]._id;
         axios.get("student/answers/"+examTakeId).then((res)=>{
-          console.log(res.data);
           setAnswers(res.data);
         }).catch(err => {
           console.log(err);
         });
+        */
       }, []);
 
     return(
@@ -172,60 +185,65 @@ export default function StudentInformation() {
                     label="Include general comment on this question's answer"
                     />
                   </Box>
-                  <Collapse in={includeComment[selectedQuestion]} timeout="auto" unmountOnExit>
+                  <Collapse in={selectedQuestion !== "" && includeComment[selectedQuestion]} timeout="auto" unmountOnExit>
                     <TextField sx={{padding: 1}} label="Comment here" multiline fullWidth></TextField>
                   </Collapse>
+                  {(annotations.length === annotation.length) && (answerImages.length === annotation.length) && (selectedQuestion!=="" && selectedQuestion <= answerImages.length) && 
                 <ImageList sx={{ width: "100%"}} cols={1}>
-                    {answerImages.map((item,index) => (
-                            <ImageListItem key={item.img}>
-                            <Annotation
-                                src={item.img}
-                                alt={item.title}
-                                annotations={annotations[index]}
-                                value={annotation[index]}
-                                onChange={onChange}
-                                onSubmit={onSubmit}
-                                allowTouch
-                                disableAnnotation={clickedImage!==index}
-                            />
-                              <Paper sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "right",
-                                alignItems: "center",
-                                width: "100%"
+                    {answerImages.map((item,index) => {
+                      console.log(item);
+                      return(
+                        
+                        <ImageListItem key={item._id}>
+                        <Annotation
+                            src={item.img}
+                            alt={item.title}
+                            annotations={annotations[index]}
+                            value={annotation[index]}
+                            onChange={onChange}
+                            onSubmit={onSubmit}
+                            allowTouch
+                            disableAnnotation={clickedImage!==index}
+                        />
+                          <Paper sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "right",
+                            alignItems: "center",
+                            width: "100%"
+                          }}>
+                            <Tooltip title="Delete previously added annotation">
+                              <IconButton disabled={clickedImage!==index} size='large' onClick={handleUndo}>
+                                <UndoIcon/>
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Add annotations to this image">
+                            <IconButton disabled={clickedImage===index} onClick={(event)=>{
+                            setClickedImage(index);
+                            setDisableAnnotations(disableAnnotations.map((item,i)=>{
+                              if(index===i) return false;
+                              else return true;
+                            }));
+                            }}>
+                                  <AddIcon />
+                            </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Close adding annotation">
+                              <IconButton disabled={clickedImage!==index} onClick={(event)=>{
+                              setClickedImage(null);
+                              setDisableAnnotations(disableAnnotations.map((item,i)=>{
+                                return true;
+                              }));
+                              setAnnotation(annotation.map((item,index)=>{return {};}));
                               }}>
-                                <Tooltip title="Delete previously added annotation">
-                                  <IconButton disabled={clickedImage!==index} size='large' onClick={handleUndo}>
-                                    <UndoIcon/>
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Add annotations to this image">
-                                <IconButton disabled={clickedImage===index} onClick={(event)=>{
-                                setClickedImage(index);
-                                setDisableAnnotations(disableAnnotations.map((item,i)=>{
-                                  if(index===i) return false;
-                                  else return true;
-                                }));
-                                }}>
-                                      <AddIcon />
-                                </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Close adding annotation">
-                                  <IconButton disabled={clickedImage!==index} onClick={(event)=>{
-                                  setClickedImage(null);
-                                  setDisableAnnotations(disableAnnotations.map((item,i)=>{
-                                    return true;
-                                  }));
-                                  setAnnotation(annotation.map((item,index)=>{return {};}));
-                                  }}>
-                                        <CloseIcon />
-                                  </IconButton>
-                                </Tooltip>
-                            </Paper>
-                            </ImageListItem>
-                    ))} 
-                </ImageList>
+                                    <CloseIcon />
+                              </IconButton>
+                            </Tooltip>
+                        </Paper>
+                        </ImageListItem>
+                      );
+                    })} 
+                </ImageList> }
               </Collapse>
           </Box>
         </Box>
