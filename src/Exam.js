@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CardMedia, Collapse, Container, FormControlLabel, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Switch, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Collapse, Container, FormControlLabel, FormLabel, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Switch, TextField, Typography } from '@mui/material';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Dimensions } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
@@ -89,8 +89,8 @@ export default function Exam() {
 
     const handleSwitchInsightOpen = (value) => {
         axios.post("/teacher/exam/insight/", {open: value, examId: examId}).then(res=>{
-            console.log("Uspješno promijenjeno");
             console.log(res);
+            setInsightOpen(value);
         }).catch(err=>{
             console.log(err);
         });
@@ -180,6 +180,7 @@ export default function Exam() {
                                     padding: "5px",
                                     margin: "5px"
                                 }}>
+                                    <Typography>{insightOpen ? "On" : "Off"}</Typography>
                                     <Switchv2 offColor={"#ff355e"} onColor={"#22c1c3"} checked={insightOpen} onChange={handleSwitchInsightOpen}/>
                                     <Typography variant='h5'>Set insight access</Typography>
                                 </Paper>
