@@ -1,53 +1,85 @@
 import { Button, Collapse, Container, FormControl, FormHelperText, Grid, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Annotation from 'react-image-annotation';
 import CreateIcon from '@mui/icons-material/Create';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/system';
-const itemData = [
-    {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'Breakfast',
-      rows: 2,
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Burger',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Camera',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
-      cols: 2,
-    }
-]
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+
 
 
 
 
 export default function ExamInsight() {
 
-    const [annotations, setAnnotations] = useState(itemData.map((item,index)=>{return [];}));
+    const [answers, setAnswers] = useState([]);
 
-    const [openWritingComplaint, setOpenWritingComplaint] = useState(itemData.map((item,index)=>{return false;}));
+    const [answerImages, setAnswerImages] = useState([]);
+
+    const [annotations, setAnnotations] = useState(answerImages.map((item,index)=>{return [];}));
+
+    const [openWritingComplaint, setOpenWritingComplaint] = useState(answerImages.map((item,index)=>{return false;}));
 
     const [openImages, setOpenImages] = useState(false);
 
     const [selectedQuestion, setSelectedQuestion] = useState(0);
 
+
     const handleSelectQuestion = (event) => {
-        setSelectedQuestion(event.target.value);
+        // prvo resetuj zapamcene slike i anotacije za prethodno pitanja
+        setAnswerImages([]);
+        setAnnotations([]);
+
+        const index = event.target.value;
+        const answer = answers[index];
+        axios.get("/student/imageAnswers/"+answer._id).then(res => {
+          const imageAnswers = res.data;
+          imageAnswers.map((imageAnswer, indexImageAnswer)=>{
+            axios.get("/student/imageAnswer/"+imageAnswer._id, {responseType: 'arraybuffer'}).then(res => {
+              const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+
+              axios.get("/annotations/" + imageAnswer._id).then((res)=>{
+                console.log(res);
+                const annotations = JSON.parse(res.data);
+                setAnswerImages((prevImages)=> {
+                    return [...prevImages, {title: "", img: dataImage}];
+                });
+                setAnnotations((prev)=>{
+                return [...prev, annotations];
+                });
+                setSelectedQuestion(index);
+              }).catch(err => {
+                console.log(err);
+              });
+            }).catch(err => {
+              console.log(err);
+            });
+          });
+        }).catch(err => {
+          console.log(err);
+        });
     }
 
     const handleComplaintSubmit = (event) => {
         event.preventDefault();
         setOpenWritingComplaint(openWritingComplaint.map(item=>false));
     }
+
+    const {examTakeId} = useParams();
+
+    useEffect(()=>{
+        console.log("uso u useffect examinsight");
+        axios.get("student/answers/"+examTakeId).then((res)=>{
+          console.log(res);
+
+          setSelectedQuestion("");
+        }).catch(err => {
+          console.log(err);
+        });
+    }, []);
+
 
     return(
         <Container maxWidth="xl" component={Paper} sx={{marginTop: 5}}>
@@ -83,7 +115,7 @@ export default function ExamInsight() {
                     <FormHelperText>Select question for answers presence</FormHelperText>
                 </FormControl>
                 <ImageList sx={{ width: "100%"}} cols={1}>
-                        {itemData.map((item,index) => (
+                        {answerImages.map((item,index) => (
                                 <ImageListItem key={item.img}>
                                 <Annotation
                                     src={item.img}

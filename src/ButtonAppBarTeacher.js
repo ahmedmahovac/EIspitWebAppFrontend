@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
   const getAndSetExams = () => {
     axios.get("/teacher/getExams").then(res=>{ // ne trebaju mi parametri jer id saljem u jwt payloadu, sad kolko je to dobra ideja i nije, al je bolje nego da stavljat podatke korisnika u url
       setExams(res.data.map(exam => {
-        return {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id} // da bih kasnije mogao promijenit exam key u nesto drugo ako budem zelio
+        return {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id, insightOpen: exam.insightOpen} // da bih kasnije mogao promijenit exam key u nesto drugo ako budem zelio
       })); // dobavi iz res
     }).catch(err=>{
       alert(err);

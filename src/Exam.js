@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, CardMedia, Collapse, Container, FormControlLabel, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Switch, TextField, Typography } from '@mui/material';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Dimensions } from 'react';
 import SchoolIcon from '@mui/icons-material/School';
 import axios from 'axios';
@@ -7,6 +7,8 @@ import StudentInformation from './StudentInformation';
 import TimerIcon from '@mui/icons-material/Timer';
 import Advantagecard from './Advantagecard';
 import { useParams } from 'react-router-dom';
+import Switchv2 from "react-switch";
+import { TeacherContext } from './ButtonAppBarTeacher';
 
 export const ExamContext = createContext();
 
@@ -27,7 +29,7 @@ const modalStyle = {
 export default function Exam() {
 
 
-
+    const {exams} = useContext(TeacherContext);
 
     const [students, setStudents] = useState([]); 
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,6 +54,11 @@ export default function Exam() {
 
     useEffect(()=>{
         axios.get("/teacher/examTakes/"+examId).then(res => {
+            exams.map((exam,index)=>{
+                if(exam._id === examId){
+                    setInsightOpen(exam.insightOpen);
+                }
+            });
             setStudents(res.data);
         }).catch(err => {
             console.log(err);
@@ -78,7 +85,21 @@ export default function Exam() {
     }
 
 
+    const [insightOpen, setInsightOpen] = useState(false);
+
+    const handleSwitchInsightOpen = (value) => {
+        axios.post("/teacher/exam/insight/", {open: value, examId: examId}).then(res=>{
+            console.log("Uspješno promijenjeno");
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        });
+    }
+
+
     const [answers, setAnswers] = useState([]);
+
+
 
     useEffect(()=>{
         console.log("uso u useEffect Exama");
@@ -150,6 +171,17 @@ export default function Exam() {
                                         <TimerIcon sx={{fontSize: 50}} color="primary"></TimerIcon>
                                     </IconButton>
                                     <Typography variant='h5'>Set additional time</Typography>
+                                </Paper>
+                                <Paper elevation={10} sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: "5px",
+                                    margin: "5px"
+                                }}>
+                                    <Switchv2 offColor={"#ff355e"} onColor={"#22c1c3"} checked={insightOpen} onChange={handleSwitchInsightOpen}/>
+                                    <Typography variant='h5'>Set insight access</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>

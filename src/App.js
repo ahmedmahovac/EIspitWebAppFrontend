@@ -75,7 +75,7 @@ function App() {
 
                     <Route exact path='testRutaZaUploadSlika' element={<UploadQuestionImages/>}/>
 
-                    <Route exact path='examInsight' element={<ExamInsight/>}>
+                    <Route exact path='examInsight/:insightKey' element={<ExamInsight/>}>
                     
                     </Route>
 

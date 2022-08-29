@@ -37,7 +37,6 @@ export default function StudentInformation() {
       const [annotations, setAnnotations] = useState([]);
     
 
-
       useEffect(()=>{
         console.log(annotations);
       }, [annotations]);
