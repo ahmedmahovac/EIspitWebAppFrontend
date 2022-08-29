@@ -63,7 +63,7 @@ export default function StudentInformation() {
           console.log(err);
         });
         answerImages.map((answerImage,index)=>{
-          axios.post("/teacher/imageAnswer",{imageAnswerId: answerImage._id, annotations: annotations[index]}).then(res=>{
+          axios.post("/teacher/imageAnswer/",{imageAnswerId: answerImage._id, annotations: annotations[index]}).then(res=>{
             console.log(res);
           }).catch(err => {
             console.log(err);
@@ -73,10 +73,13 @@ export default function StudentInformation() {
       }
 
       const handleSelectQuestion = (event) => {
-        // prvo resetuj zapamcene slike i anotacije za prethodno pitanja
+        // prvo resetuj zapamcene slike i anotacije i sve ostalo za prethodno pitanja
         setAnswerImages([]);
         setAnnotation([]);
         setAnnotations([]);
+        setIncludeComment(false);
+        setPoints(0);
+        setComment("");
         // ovdje stavis setItemData na slike samo poslane za izabrano pitanje
         const index = event.target.value;
         const answer = answers[index];
@@ -86,7 +89,7 @@ export default function StudentInformation() {
             axios.get("/student/imageAnswer/"+imageAnswer._id, {responseType: 'arraybuffer'}).then(res => {
               const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
               setAnswerImages((prevImages)=> {
-                return [...prevImages, {title: "", img: dataImage}];
+                return [...prevImages, {title: "", img: dataImage, _id: imageAnswer._id, _answerId: imageAnswer._answerId}];
               });
               setAnnotation((prev)=>{
                 return [...prev, {}];

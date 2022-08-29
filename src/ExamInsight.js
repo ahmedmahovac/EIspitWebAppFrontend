@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
+import { Buffer } from 'buffer';
 
 
 
@@ -18,13 +18,13 @@ export default function ExamInsight() {
 
     const [answerImages, setAnswerImages] = useState([]);
 
-    const [annotations, setAnnotations] = useState(answerImages.map((item,index)=>{return [];}));
+    const [annotations, setAnnotations] = useState([]);
 
     const [openWritingComplaint, setOpenWritingComplaint] = useState(answerImages.map((item,index)=>{return false;}));
 
     const [openImages, setOpenImages] = useState(false);
 
-    const [selectedQuestion, setSelectedQuestion] = useState(0);
+    const [selectedQuestion, setSelectedQuestion] = useState("");
 
 
     const handleSelectQuestion = (event) => {
@@ -39,10 +39,10 @@ export default function ExamInsight() {
           imageAnswers.map((imageAnswer, indexImageAnswer)=>{
             axios.get("/student/imageAnswer/"+imageAnswer._id, {responseType: 'arraybuffer'}).then(res => {
               const dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
-
-              axios.get("/annotations/" + imageAnswer._id).then((res)=>{
-                console.log(res);
-                const annotations = JSON.parse(res.data);
+              axios.get("/student/annotations/" + imageAnswer._id).then((res)=>{
+                console.log(res.data);
+                const annotations = res.data;
+                console.log(annotations);
                 setAnswerImages((prevImages)=> {
                     return [...prevImages, {title: "", img: dataImage}];
                 });
@@ -67,18 +67,18 @@ export default function ExamInsight() {
         setOpenWritingComplaint(openWritingComplaint.map(item=>false));
     }
 
-    const {examTakeId} = useParams();
+    const {insightKey} = useParams();
 
     useEffect(()=>{
-        console.log("uso u useffect examinsight");
-        axios.get("student/answers/"+examTakeId).then((res)=>{
-          console.log(res);
-
+        console.log("uso u useffect examinsight " + insightKey);
+        axios.get("student/answers/"+insightKey).then((res)=>{
+          setAnswers(res.data);
           setSelectedQuestion("");
         }).catch(err => {
           console.log(err);
         });
     }, []);
+
 
 
     return(
@@ -107,10 +107,11 @@ export default function ExamInsight() {
                     onChange={handleSelectQuestion}
                     label="Question"
                     >
-                    <MenuItem value={1}>1</MenuItem>
-                    <MenuItem value={2}>2</MenuItem>
-                    <MenuItem value={3}>3</MenuItem>
-                    <MenuItem value={4}>4</MenuItem>
+                        {answers.map((answers, index)=>{
+                            return(
+                                <MenuItem value={index}>{index+1}</MenuItem>
+                            );
+                        })}
                     </Select>
                     <FormHelperText>Select question for answers presence</FormHelperText>
                 </FormControl>

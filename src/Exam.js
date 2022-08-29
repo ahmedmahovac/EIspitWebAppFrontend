@@ -54,8 +54,9 @@ export default function Exam() {
 
     useEffect(()=>{
         axios.get("/teacher/examTakes/"+examId).then(res => {
+            console.log(exams);
             exams.map((exam,index)=>{
-                if(exam._id === examId){
+                if(exam.id === examId){
                     setInsightOpen(exam.insightOpen);
                 }
             });
