@@ -43,6 +43,7 @@ export default function Exam() {
         setSelectedIndex(index);
         const examTakeId = students[index]._id;
         axios.get("student/answers/"+examTakeId).then((res)=>{
+            console.log(res.data);
           setAnswers(res.data);
           setSelectedQuestion("");
         }).catch(err => {
@@ -54,7 +55,7 @@ export default function Exam() {
 
     useEffect(()=>{
         axios.get("/teacher/examTakes/"+examId).then(res => {
-            console.log(exams);
+            console.log(res);
             exams.map((exam,index)=>{
                 if(exam.id === examId){
                     setInsightOpen(exam.insightOpen);
@@ -101,6 +102,10 @@ export default function Exam() {
     const [answers, setAnswers] = useState([]);
 
 
+    const handleSearchNameValue = (event) => {
+        setSearchNameValue(event.target.value);
+    }
+
 
     useEffect(()=>{
         console.log("uso u useEffect Exama");
@@ -119,7 +124,7 @@ export default function Exam() {
                     <Paper sx={{
                         
                     }}>
-                        <TextField autoFocus value={searchNameValue} label="search name (ne radi jos)" sx={{m: 1, padding: "5px"}}></TextField>
+                        <TextField autoFocus value={searchNameValue} onChange={handleSearchNameValue} label="search name" sx={{m: 1, padding: "5px"}}></TextField>
                         <List component="nav" aria-label="students list">
                             {students.map((item, index)=>{
                                 return(

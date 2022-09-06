@@ -39,34 +39,34 @@ export default function ButtonAppBar() {
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<InputIcon/>} color="inherit">
-                <Link className={styles.ButtonAppBarLink} to="/login">Prijava</Link>
+                <Link className={styles.ButtonAppBarLink} to="/login">Login</Link>
               </Button>
               <Button startIcon={<HowToRegIcon/>} color="inherit">
-              <Link className={styles.ButtonAppBarLink} to="/registration">Registracija</Link>
+              <Link className={styles.ButtonAppBarLink} to="/registration">Registration</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >
-              Za nastavnike
+              For teachers
             </Typography>
           </ButtonGroup>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' >
               <Button startIcon={<PlayArrowIcon/>} color="inherit">
-                <Link className={styles.ButtonAppBarLink} to="/examAccess">Pristup Ispitu</Link>
+                <Link className={styles.ButtonAppBarLink} to="/examAccess">Exam access</Link>
               </Button>
               <Button startIcon={<ImageSearchIcon/>} color="inherit">
-                <Link className={styles.ButtonAppBarLink} to="/insightAccess">E-Uvid</Link>
+                <Link className={styles.ButtonAppBarLink} to="/insightAccess">E-Insight</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center'>
-              Za studente
+              For students
             </Typography>
           </ButtonGroup>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
           <Button startIcon={<CallIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
-            <Link className={styles.ButtonAppBarLink} to="/contact">Kontakt</Link>
+            <Link className={styles.ButtonAppBarLink} to="/contact">Contact</Link>
           </Button>
           </ButtonGroup>
           {user.auth && (

@@ -32,7 +32,7 @@ export default function ContactPage() {
                     alignItems: "center"
                 }}>
                     <Typography variant='h5'>
-                        Opišite svoj upit ili sugestiju
+                        Describe your question or suggestion
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{
                         mt: 1, padding: "5px", width: "100%"
@@ -45,7 +45,7 @@ export default function ContactPage() {
                                 required
                                 fullWidth
                                 id="firstName"
-                                label="Ime"
+                                label="First name"
                                 autoFocus
                                 sx={{padding: "5px"}}
                                 />
@@ -55,7 +55,7 @@ export default function ContactPage() {
                                 required
                                 fullWidth
                                 id="lastName"
-                                label="Prezime"
+                                label="Last name"
                                 name="lastName"
                                 autoComplete="family-name"
                                 sx={{padding: "5px"}}
@@ -66,7 +66,7 @@ export default function ContactPage() {
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email adresa"
+                                label="Email address"
                                 name="email"
                                 autoComplete="email"
                                 sx={{padding: "5px"}}
@@ -75,7 +75,7 @@ export default function ContactPage() {
                         </Grid>
                         <TextField
                         name='message'
-                        label="Poruka"
+                        label="Message"
                         fullWidth
                         required
                         id='contactArea'
@@ -87,7 +87,7 @@ export default function ContactPage() {
                         <Button variant='contained' type='submit' fullWidth sx={{
                             mt: 1, mb: 1
                         }}>
-                            Pošalji
+                            SEND
                     </Button>
                     </Box>
                 </Box>    

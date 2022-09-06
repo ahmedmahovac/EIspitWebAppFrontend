@@ -17,6 +17,9 @@ import {
   Link, Outlet
 } from "react-router-dom";
 import BatteryGauge from 'react-battery-gauge';
+import { userContext } from './App';
+import { useContext } from 'react';
+
 
 
 const Completionist = () => <div>Time is up</div>;
@@ -26,6 +29,10 @@ const Completionist = () => <div>Time is up</div>;
 
 
 export default function ButtonAppBar() {
+
+
+  const {examDuration} = useContext(userContext);
+
   return (
     <Box sx={{ flexGrow: 1}}>
       <AppBar position="sticky"> 
@@ -36,15 +43,6 @@ export default function ButtonAppBar() {
           </Typography>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
-            <ButtonGroup sx={{alignSelf: "center"}} variant='text' size='large'>
-                <BatteryGauge value={70} size={70}></BatteryGauge>
-            </ButtonGroup>  
-            <Typography variant="subtitle2" align='center' >
-              Battery level
-            </Typography>
-          </ButtonGroup>
-          <Divider className='dividerGeneral' orientation="vertical" flexItem/>
-          <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>
                 <AccessTimeFilledIcon fontSize='small'/>
                 <Countdown date={Date.now() + 10000*3600}>
@@ -52,21 +50,21 @@ export default function ButtonAppBar() {
                 </Countdown>
             </ButtonGroup>  
             <Typography variant="subtitle2" align='center' >
-              Preostalo vrijeme
+              Time remaining
             </Typography>
           </ButtonGroup>
           <Divider className='dividerGeneral' orientation="vertical" flexItem/>
           <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
             <ButtonGroup variant='text' size='large'>
               <Button startIcon={<CloseIcon/>} color="inherit">
-                <Link className={styles.ButtonAppBarLink} to="/">Izađi</Link>
+                <Link className={styles.ButtonAppBarLink} to="/">Leave without submitting</Link>
               </Button>
               <Button startIcon={<PublishIcon/>} color="inherit">
-              <Link className={styles.ButtonAppBarLink} to="/">Predaj</Link>
+              <Link className={styles.ButtonAppBarLink} to="/">Submit</Link>
               </Button>
             </ButtonGroup>
             <Typography variant="subtitle2" align='center' >
-              Opcije
+              Options
             </Typography>
           </ButtonGroup>
         </Toolbar>

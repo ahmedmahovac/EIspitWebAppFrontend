@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styles from './SignUpPage.module.css';
 import {Link as LinkRouter, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-
+import { userContext } from './App';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -28,12 +28,18 @@ const theme = createTheme();
 export default function SignUp() {
 
   const [errors, setErrors] = useState("");
+
+  const {user} = React.useContext(userContext);
   
   const navigate = useNavigate();
 
   const [registeredSuccessfully, setRegisteredSuccessfully] = useState(false);
 
   useEffect(()=>{
+    if(user.auth) {
+      alert("You have to logout to gain registering access.");
+      navigate("../teacher/");
+    }
     if(registeredSuccessfully) {
       navigate("../login");
     }
@@ -89,7 +95,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Registracija
+            Register
           </Typography>
           <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -99,7 +105,7 @@ export default function SignUp() {
                   name="firstName"
                   fullWidth
                   id="firstName"
-                  label="Ime"
+                  label="First name"
                   autoFocus
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -111,7 +117,7 @@ export default function SignUp() {
                 <TextField
                   fullWidth
                   id="lastName"
-                  label="Prezime"
+                  label="Last name"
                   name="lastName"
                   autoComplete="family-name"
                   onChange={formik.handleChange}
@@ -124,7 +130,7 @@ export default function SignUp() {
                 <TextField
                   fullWidth
                   id="email"
-                  label="Email adresa"
+                  label="Email address"
                   name="email"
                   autoComplete="email"
                   onChange={formik.handleChange}
@@ -137,7 +143,7 @@ export default function SignUp() {
                 <TextField
                   fullWidth
                   name="password"
-                  label="Lozinka"
+                  label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -150,7 +156,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="Želim da me smarate putem maila."
+                  label="Notify me about any news by email."
                 />
               </Grid>
             </Grid>

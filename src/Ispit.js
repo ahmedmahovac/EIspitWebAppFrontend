@@ -1,5 +1,5 @@
 import { Box, Collapse, Container, CssBaseline, IconButton, Typography } from '@mui/material';
-import { Component, createContext, useEffect, useState } from 'react';
+import { Component, createContext, useContext, useEffect, useState } from 'react';
 import CardPitanje from './CardPitanje';
 import pitanja from './Pitanja.js';
 import Odgovor from './Odgovor.js';
@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import { Buffer } from 'buffer';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
 
 
 export default function Ispit() {
@@ -39,16 +38,19 @@ export default function Ispit() {
             const questions = res.data;
             console.log(questions);
             questions.map((question, indexQuestion) => { // moram dohvatit jedno pa drugo, da bih znao kad sam zavrsio sa kompletnim ucitavanjem pitanja
-                    axios.get("/student/pdfQuestion/"+question._id).then(res => {
-                        let dataPdf = "";
+                    axios.get("/student/pdfQuestion/"+question._id, {responseType: 'arraybuffer'}).then(res => {
+                        let dataPdf = null;
                         if(question.pdfIncluded) {
-                            dataPdf = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+                           // dataPdf = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
+                           const blob = new Blob([res.data], { type: 'application/pdf; charset=utf-8' });
+                           dataPdf = URL.createObjectURL(blob);
                         }
                         axios.get("/student/imageQuestionTemporary/" + question._id, {responseType: 'arraybuffer'}).then(res => {
                             let dataImage = "";
                             if(question.imagesIncluded){
                                 dataImage = "data:" + res.headers["content-type"] + ";base64," + Buffer.from(res.data).toString('base64');
                             }
+                            console.log(dataPdf);
                             setExamQuestions((prevQuestions)=>{
                                 return [...prevQuestions, {_id: question._id, title: question.title, text: question.text, _examId: question._examId, pdfIncluded: question.pdfIncluded, imagesIncluded: question.imagesIncluded, image: dataImage, pdf: dataPdf}]
                             });
@@ -93,18 +95,27 @@ export default function Ispit() {
 }
     return(
                 <Container component="main" maxWidth="xl">
-                                <IconButton
-                                size="small"
-                                onClick={() => {
-                                    if(!questionsAdded){
-                                        setQuestionsAdded(true);
-                                        getQuestions();
-                                    }
-                                    setShowQuestions(!showQuestions);
-                                }}
-                                >
-                                {showQuestions ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                </IconButton>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <IconButton
+                        onClick={() => {
+                            if(!questionsAdded){
+                                setQuestionsAdded(true);
+                                getQuestions();
+                            }
+                            setShowQuestions(!showQuestions);
+                        }}
+                        >
+                        {showQuestions ? <KeyboardArrowUpIcon fontSize='large' /> : <KeyboardArrowDownIcon fontSize='large'/>}
+                        </IconButton>
+                        {showQuestions ? 
+                        <Typography variant='h5' sx={{fontWeight: "bold"}}>Shrink questions</Typography> 
+                        : <Typography variant='h5' sx={{fontWeight: "bold"}}>Expand questions</Typography> }
+                    </Box>
                     <CssBaseline/>
                     <Collapse in={showQuestions} timeout="auto" unmountOnExit>
                         <Box sx={{
@@ -115,7 +126,7 @@ export default function Ispit() {
                             alignItems: "center"
                         }}>
                             <Typography variant='h3'>
-                                Pitanja:
+                                Questions:
                             </Typography>
                             {
                                 examQuestions.map((item, index)=>{
@@ -124,7 +135,7 @@ export default function Ispit() {
                                             padding: "2",
                                             width: "100%"
                                         }}>
-                                            <CardPitanje title={item.title} text={item.text} imageUrl={item.image} />
+                                            <CardPitanje title={item.title} text={item.text} imageUrl={item.image} pdf={item.pdf}/>
                                             <Collapse in={answeringAvailable} timeout="auto" unmountOnExit>
                                             <Odgovor question={item} />
                                             </Collapse>

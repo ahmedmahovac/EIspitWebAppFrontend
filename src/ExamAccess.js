@@ -21,7 +21,7 @@ export default function ExamAccess() {
 
     const [validationSuccess, setValidationSuccess] = useState(false);
 
-    const {user, setExamTakeId} = useContext(userContext);
+    const {user, setExamTakeId, setExamDuration} = useContext(userContext);
 
     const fetchExamAxios = (queryParams) => {
         axios.get("/student/exam?"+queryParams).then((res)=>{
@@ -55,6 +55,8 @@ export default function ExamAccess() {
 
     const [fetchRequestSent, setFetchRequestSent] = useState(false);
 
+
+
     useEffect(()=>{
         console.log("uso u useeffect");
         if(user.auth) {
@@ -87,9 +89,14 @@ export default function ExamAccess() {
           const examKey = searchParams.get("examKey");
           axios.post("/student/takeExam",{...values, examKey: examKey}).then((res)=>{
             // OVDJE dostavi podatak o examtakeu
-            setExamTakeId(res.data._id); // jer kreirani objekat vracam kao respond, ovo mi treba kasnije za upload rjesenja
-            setFetchRequestSent(false);
-            navigate("../exam/"+examKey);
+            axios.get("/teacher/examDuration/"+examKey).then(respondExam=>{
+                setExamDuration(respondExam.duration);
+                setExamTakeId(res.data._id); // jer kreirani objekat vracam kao respond, ovo mi treba kasnije za upload rjesenja
+                setFetchRequestSent(false);
+                navigate("../exam/"+examKey);
+            }).catch(err => {
+                console.log(err);
+            });
           }).catch(err => {
             if(err.response.status===400) {
                 setInfo("Student with given email address has already been registered to this exam.");
@@ -149,7 +156,7 @@ export default function ExamAccess() {
                             <SchoolIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Unesite lične podatke
+                            Enter personal info
                         </Typography>
                         <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
                             <Grid container spacing={2}>
@@ -159,7 +166,7 @@ export default function ExamAccess() {
                                 name="firstName"
                                 fullWidth
                                 id="firstName"
-                                label="Ime"
+                                label="First name"
                                 autoFocus
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -171,7 +178,7 @@ export default function ExamAccess() {
                                 <TextField
                                 fullWidth
                                 id="lastName"
-                                label="Prezime"
+                                label="Last name"
                                 name="lastName"
                                 autoComplete="family-name"
                                 onChange={formik.handleChange}
@@ -184,7 +191,7 @@ export default function ExamAccess() {
                                 <TextField
                                 fullWidth
                                 id="email"
-                                label="Email adresa"
+                                label="Email address"
                                 name="email"
                                 autoComplete="email"
                                 onChange={formik.handleChange}
@@ -197,7 +204,7 @@ export default function ExamAccess() {
                                 <TextField
                                 fullWidth
                                 name="index"
-                                label="Index"
+                                label="Student ID"
                                 id="index"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}

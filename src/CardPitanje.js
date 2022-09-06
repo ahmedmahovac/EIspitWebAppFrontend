@@ -6,8 +6,17 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions, Grid} from '@mui/material';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css'
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { Worker } from '@react-pdf-viewer/core';
+import { Viewer } from '@react-pdf-viewer/core';
+
 
 export default function CardPitanje(props) {
+
+    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
     const handleBrokenImage = (event) => {
         event.target.style.display = "none";
     }
@@ -28,6 +37,11 @@ export default function CardPitanje(props) {
             <Zoom>
                 <img src={props.imageUrl} width="100%"/> 
             </Zoom>
+            {props.pdf!==null&&(
+            <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.14.305/build/pdf.worker.min.js">
+                <Viewer plugins={[defaultLayoutPluginInstance]} fileUrl={props.pdf} />;
+            </Worker>
+            )}
         </CardActionArea>
         </Card>
     );

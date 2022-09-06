@@ -59,6 +59,10 @@ export default function NewExam() {
     }
 
 
+    useEffect(()=>{
+        console.log(pdfFileObjectUrl);
+    },[pdfFileObjectUrl]);
+
 
 
     const handleAddTeacher = (event) => {
@@ -80,6 +84,14 @@ export default function NewExam() {
     }
 
 
+    const [examDuration, setExamDuration] = useState(0);
+
+    const handleExamDuration = (event) => {
+        setExamDuration(event.currentTarget.value);
+    }
+
+
+
     const handleCheckBoxChange = (event) => {
         setCheckBoxState({
             ...checkboxState,
@@ -92,6 +104,9 @@ export default function NewExam() {
     }
 
     const handleQuestionAdded = (event) => {
+        if(checkboxState.checkboxImages && selectedImagesForUpload.length!==1) {
+            return;
+        }
         // ovdje vec predstavi sliku i pdf u pogodnom formatu za spremanju u bazu
         setQuestions([...questions, {title: questionTitle, questionText: questionText, pdf: pdfFile, images: selectedImagesForUpload}]);
         // ovo sve skupa moze u neku fju koja se npr zove resetuj unesene podatke za dodavanje pitanja
@@ -158,7 +173,7 @@ export default function NewExam() {
 
     const handleAddExam = (event) => {
         // dodaj exam u bazu
-        axios.post("/teacher/addExam", {title: examTitle,}).then((res)=>{
+        axios.post("/teacher/addExam", {title: examTitle,duration: examDuration}).then((res)=>{
             let exam = res.data;
             setExams([...exams, {examTitle: exam.title, createdTime: exam.createdTime, open: exam.open, examKey: exam._id, id: exam._id}]); // exam key je za sada ID ispita, mogu i refreshat umjesto sto odmah stavljam al je dosta skuplja operacija
             navigate("../exams");
@@ -250,6 +265,32 @@ export default function NewExam() {
                         </Paper>
                         
                     </Box>     
+                    <Box sx={{
+                        padding: "2",
+                        width: "100%",
+                        m: 3
+                    }}>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "#96ccff"
+                        }}>
+                            <Typography variant='h4'>
+                                Add exam duration
+                            </Typography>
+                            <Tooltip title="Enter exam duration in minutes. " placement='right' arrow>
+                                <IconButton sx={{marginLeft: "auto"}}>
+                                    <HelpIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                        <Paper>
+                            <TextField type="number" onChange={handleExamDuration} value={examDuration} required label="Duration" fullWidth sx={{padding: "5px" , marginTop: 1}}></TextField>
+                        </Paper>
+                        
+                    </Box> 
                     <Box sx={{
                         padding: "2",
                         width: "100%",
@@ -379,7 +420,7 @@ export default function NewExam() {
                         width: "100%",
 
                     }}>
-                        {questions.length!=0 && questions.map((item)=>{
+                        {questions.length!==0 && questions.map((item)=>{
                             return(
                                 <PitanjePreview {...item}/>
                             );
@@ -435,7 +476,7 @@ export default function NewExam() {
                         </Tooltip>
                         : null}
                             <Typography variant='h6' sx={{marginLeft: "auto", marginRight: 1}}>
-                                {questions.length} teachers added
+                                {0} teachers added
                             </Typography>
                         </Paper>
                         {addingTeacherActive && (

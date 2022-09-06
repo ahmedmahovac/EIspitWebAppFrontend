@@ -39,7 +39,7 @@ export default function SignIn() {
     if(user.auth) {
       navigate("../teacher");
     }
-  }, [user]); // ovo se izvrsava i kad se komponenta mounta, tako da radi kad udjemo u login a vec smo prijavljeni, automatski redirecta
+  }, [user]); // ovo se izvrsava kad se komponenta mounta, tako da radi kad udjemo u login a vec smo prijavljeni, automatski redirecta
 
   const formik = useFormik({
     initialValues: {
@@ -55,7 +55,7 @@ export default function SignIn() {
       .then(res=> {
         localStorage.setItem('jwtToken', res.data.token)
         axios.defaults.headers.common['Authorization'] = 'Bearer '+res.data.token
-        setUser({ auth:true, name: res.data.username }) // vraca mi username jer sam dao tu informaciju prilikom registracije (first + lastname cemo stavit da je username)
+        setUser({ auth:true, name: res.data.username })                                  // vraca mi username jer sam dao tu informaciju prilikom registracije (first + lastname cemo stavit da je username)
       })
       .catch(err=>{
         if(err.response){
@@ -78,14 +78,14 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Prijava
+            Login
           </Typography>
           <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               fullWidth
               id="email"
-              label="Email adresa"
+              label="Email address"
               name="email"
               autoComplete="email"
               autoFocus
@@ -97,10 +97,9 @@ export default function SignIn() {
             {formik.touched.email && formik.errors.email ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.email}</Typography>) : null}
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
-              label="Lozinka"
+              label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -112,7 +111,7 @@ export default function SignIn() {
             {formik.touched.password && formik.errors.password ? (<Typography variant='subtitle2' sx={{color: "#ff355e"}}>{formik.errors.password}</Typography>) : null}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Zapamti me"
+              label="Remember me"
             />
             <Button
               type="submit"
@@ -120,7 +119,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Prijava
+              Login
             </Button>
             <Grid container sx={{
               width: "100%"

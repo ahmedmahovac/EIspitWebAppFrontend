@@ -92,11 +92,6 @@ const handleLogout = (e) => {
                   <Link className={styles.ButtonAppBarLink} to="../teacher/exams">Exams list</Link>
               </Button>
               </ButtonGroup>
-              <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
-              <Button startIcon={<AccountBoxIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>
-                  <Link className={styles.ButtonAppBarLink} to="../teacher/profile">Profile</Link>
-              </Button>
-              </ButtonGroup>
               <Divider className='dividerGeneral' orientation="vertical" flexItem/>
               <ButtonGroup orientation='vertical' className={styles.btnGroupGeneral}>
               <Button className={styles.ButtonAppBarLink} startIcon={<CallIcon/>} color="inherit" className={styles.btnGroupGeneral} variant='text'>

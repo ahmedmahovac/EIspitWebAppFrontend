@@ -36,7 +36,7 @@ import Profile from './Profile';
 
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:9000';
+axios.defaults.baseURL = 'http://192.168.0.108:9000';
 
 export const userContext = createContext();
 
@@ -47,8 +47,11 @@ function App() {
 
   const  [examTakeId, setExamTakeId] = useState(null);
 
+
+  const [examDuration, setExamDuration] = useState(0);
+
     return (
-      <userContext.Provider value={{user: user, setUser: setUser, examTakeId: examTakeId, setExamTakeId: setExamTakeId}}>
+      <userContext.Provider value={{user: user, setUser: setUser, examTakeId: examTakeId, setExamTakeId: setExamTakeId, examDuration: examDuration,  setExamDuration: setExamDuration}}>
         <Router>
             <Box>
               <Routes>
