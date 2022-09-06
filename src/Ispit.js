@@ -8,12 +8,11 @@ import { useParams } from 'react-router-dom';
 import { Buffer } from 'buffer';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
+import { ExamWorkContext } from './ButtonAppBarExam';
 
 export default function Ispit() {
 
-
-    const [answeringAvailable, setAnsweringAvailable] = useState(true); //asinhrono cemo provjeravati dal je od servera poslano da je ovo omoguceno, u nekim vremenskim intervalima
+    const {answeringAvailable} = useContext(ExamWorkContext);
 
     const [examQuestions, setExamQuestions] = useState([]); 
 
@@ -23,11 +22,6 @@ export default function Ispit() {
 
 
     const [questionsAdded, setQuestionsAdded] = useState(false);
-
-    useEffect(()=>{
-    console.log(examQuestions);
-    }, [examQuestions]);
-
 
 
    

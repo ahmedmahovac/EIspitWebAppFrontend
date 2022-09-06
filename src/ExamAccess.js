@@ -21,12 +21,14 @@ export default function ExamAccess() {
 
     const [validationSuccess, setValidationSuccess] = useState(false);
 
-    const {user, setExamTakeId, setExamDuration} = useContext(userContext);
+    const {user, setExamTakeId, setExamDuration, setExamOpenedTime} = useContext(userContext);
 
     const fetchExamAxios = (queryParams) => {
         axios.get("/student/exam?"+queryParams).then((res)=>{
             setInfo("Exam key validation successful. Please enter your personal info now to continue.");
             setSearchParams({examKey: res.data.examKey});
+            setExamOpenedTime(new Date(res.data.openedTime));
+            setExamDuration(res.data.duration);
             setValidationSuccess(true);
             // mogu uzet i lokalni key jer sam pomocu njega dobio ovaj sto mi je u respondu
             // navigate("../examAccessEnterPersonalInfo?examKey="+res.data.examKey);
@@ -89,14 +91,9 @@ export default function ExamAccess() {
           const examKey = searchParams.get("examKey");
           axios.post("/student/takeExam",{...values, examKey: examKey}).then((res)=>{
             // OVDJE dostavi podatak o examtakeu
-            axios.get("/teacher/examDuration/"+examKey).then(respondExam=>{
-                setExamDuration(respondExam.duration);
-                setExamTakeId(res.data._id); // jer kreirani objekat vracam kao respond, ovo mi treba kasnije za upload rjesenja
-                setFetchRequestSent(false);
-                navigate("../exam/"+examKey);
-            }).catch(err => {
-                console.log(err);
-            });
+            setExamTakeId(res.data._id); // jer kreirani objekat vracam kao respond, ovo mi treba kasnije za upload rjesenja
+            setFetchRequestSent(false);
+            navigate("../exam/"+examKey);
           }).catch(err => {
             if(err.response.status===400) {
                 setInfo("Student with given email address has already been registered to this exam.");

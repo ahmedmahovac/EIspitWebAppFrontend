@@ -50,8 +50,11 @@ function App() {
 
   const [examDuration, setExamDuration] = useState(0);
 
+
+  const [examOpenedTime, setExamOpenedTime] = useState(Date.now());
+
     return (
-      <userContext.Provider value={{user: user, setUser: setUser, examTakeId: examTakeId, setExamTakeId: setExamTakeId, examDuration: examDuration,  setExamDuration: setExamDuration}}>
+      <userContext.Provider value={{user: user, setUser: setUser, examTakeId: examTakeId, setExamTakeId: setExamTakeId, examDuration: examDuration,  setExamDuration: setExamDuration, setExamOpenedTime: setExamOpenedTime, examOpenedTime: examOpenedTime}}>
         <Router>
             <Box>
               <Routes>

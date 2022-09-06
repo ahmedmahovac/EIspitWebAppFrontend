@@ -59,6 +59,7 @@ export default function StudentInformation() {
       const handleReviewSubmit = (event) => {
         axios.post("/teacher/answerReview/", {comment: comment, points: points, answerId: answers[selectedQuestion]._id}).then(res => {
           console.log(res);
+          alert("Answer review successfully submitted!");
         }).catch(err => {
           console.log(err);
         });
