@@ -76,16 +76,27 @@ This document contains brief overview of application functionalities and some im
 
 - Question's content is clearly visible (no matter what type of content is present)
 - Zoom option for question images available
+- Timer which shows remaining time available during exam
 <br/>
 
--Question images and question pdfs are retrieved from backend server disc by using information available in database (path to file on disc)
+- Question images and question pdfs are retrieved from backend server disc by using information available in database (path to file on disc)
 
 ![pregledPitanja (1)](https://user-images.githubusercontent.com/73321593/205786066-0a7ca212-cdd7-4dd7-93cd-02c64599009d.png)
 
 ### Taking pictures of answers by using mobile device
 
--
+- Questions can be answered in any order
+- Answering should be done on paper
+- Taking pictures of answers is available at a certain time before exam end (15 minutes before end by default). When available, QR code for uploading images is visible
+- Every question has its own QR code
+- When scanned with mobile device, QR code takes student to an app route which provides a way to upload images of answers
+- Unlimited number of uploaded images
+- *Rotation of uploaded image* option available
+<br/>
 
+- Timer is constantly being checked in order to detect answering time
+- QR code contains information needed to be put in URL to route which uploads answer images (basically information which identifies question and information about student who is taking an exam)
+- 
 ![uploadRjesenjaMobitel (1)](https://user-images.githubusercontent.com/73321593/205786251-4298a3a3-52ef-45f7-89e8-caca6a05ae9b.png)
 
 ## Review of students' exam takes
