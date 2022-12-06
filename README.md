@@ -51,7 +51,15 @@ This document contains brief overview of application functionalities.
 
 ## Viewing created exams
 
+- Single exam's relevant information available
+- Unique exam key as a way of distributing certain exam to students
+- Searching by exam title
+- Sorting by **created time** / **title** 
+- **Open** / **Close** exam for students
+- **Delete exam** / **Edit exam** / **Enter exam insight** options available
+<br /> 
 
+- No need to manually refresh list to apply changes to UI, it happens automatically
 
 ![pregledKreiranihISpita (1)](https://user-images.githubusercontent.com/73321593/205785412-62599cc6-e973-4ff7-99a4-42812a65f41e.png)
 
