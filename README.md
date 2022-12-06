@@ -57,7 +57,7 @@ This document contains brief overview of application functionalities and some im
 - Searching by exam title
 - Sorting by **created time** / **title** 
 - **Open** / **Close** exam for students
-- **Delete exam** / **Edit exam** / **Enter exam insight** options available
+- **Delete exam** / **Edit exam** / **Enter exam reviewing** options available
 <br /> 
 
 - No need to manually refresh list to apply changes to UI, it happens automatically
@@ -66,13 +66,25 @@ This document contains brief overview of application functionalities and some im
 
 ## Accessing exam as a student
 
+- Student accesses the exam by using exam key provided by his teacher (*Exam has to be opened for students*)
+- To fetch the exam, student has to enter personal info
+- Every exam take is identified by email address which can be used only once for certain exam
+
 ![pristupIspitu](https://user-images.githubusercontent.com/73321593/205785675-0b56247f-1215-4460-a72e-66ad33742bb8.png)
 
 ### Viewing exam questions
 
+- Question's content is clearly visible (no matter what type of content is present)
+- Zoom option for question images available
+<br/>
+
+-Question images and question pdfs are retrieved from backend server disc by using information available in database (path to file on disc)
+
 ![pregledPitanja (1)](https://user-images.githubusercontent.com/73321593/205786066-0a7ca212-cdd7-4dd7-93cd-02c64599009d.png)
 
 ### Taking pictures of answers by using mobile device
+
+-
 
 ![uploadRjesenjaMobitel (1)](https://user-images.githubusercontent.com/73321593/205786251-4298a3a3-52ef-45f7-89e8-caca6a05ae9b.png)
 
