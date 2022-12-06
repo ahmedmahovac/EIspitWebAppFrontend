@@ -37,7 +37,7 @@ This document contains brief overview of application functionalities.
 
 ![uploadRjesenjaMobitel (1)](https://user-images.githubusercontent.com/73321593/205786251-4298a3a3-52ef-45f7-89e8-caca6a05ae9b.png)
 
-## Review of all students' exam takes
+## Review of students' exam takes
 
 ![examResults](https://user-images.githubusercontent.com/73321593/205787094-deb7f0bd-4181-4f7b-bf77-c64806f5a0ad.png)
 
