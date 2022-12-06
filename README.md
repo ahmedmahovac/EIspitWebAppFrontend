@@ -1,6 +1,6 @@
 # E-Ispit Online Exam Web application
 
-This document contains brief overview of application functionalities. 
+This document contains brief overview of application functionalities. <br/>
 *This is repository for frontend part of application only. Backend part is available here: https://github.com/ahmedmahovac/EIspitWebAppBackend*
 
 **General implementation details:**
