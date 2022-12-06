@@ -1,6 +1,7 @@
 # E-Ispit Online Exam Web application
 
-This document contains brief overview of application functionalities. *This is repository for frontend part of application only. Backend part is available here: https://github.com/ahmedmahovac/EIspitWebAppBackend*
+This document contains brief overview of application functionalities. 
+*This is repository for frontend part of application only. Backend part is available here: https://github.com/ahmedmahovac/EIspitWebAppBackend*
 
 **General implementation details:**
 - Axios is used as HTTP client
