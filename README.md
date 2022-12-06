@@ -1,8 +1,6 @@
 # E-Ispit Online Exam Web application
 
-This document contains brief overview of app functionalities.
-
-**Backend of this application is available on another repository : **
+This document contains brief overview of application functionalities.
 
 ## Registration
 
