@@ -4,6 +4,7 @@ This document contains brief overview of application functionalities.
 
 **General implementation details:**
 - Axios is used as HTTP client
+- MongoDB is located in cloud (Atlas MongoDB)
 
 ## Registration
 
@@ -28,9 +29,20 @@ This document contains brief overview of application functionalities.
 
 ## Creating an exam
 
+- Setting up title, exam duration and exam questions
+- Unlimited number of exam questions
+
 ![kreiranjeIspitaFrontend (1)](https://user-images.githubusercontent.com/73321593/205784889-29043066-5a93-45e9-8709-2b79af224311.png)
 
 ### Creating single exam question
+
+- Three ways to describe question content: **text**, **images** and **pdf file** (can be combined)
+- Zoom option for uploaded images
+- Multifunctional pdf viewer for uploaded pdf file
+<br /> 
+
+- **Multer** library is used for storing images and pdfs
+- Files are stored on backend server's disc, while relevant information about them is stored in cloud database
 
 ![kreiranjePitanjaFrontend (1)](https://user-images.githubusercontent.com/73321593/205785046-c5178e2f-d90b-4b6a-9b7d-50111f87699f.png)
 
@@ -38,6 +50,8 @@ This document contains brief overview of application functionalities.
 
 
 ## Viewing created exams
+
+
 
 ![pregledKreiranihISpita (1)](https://user-images.githubusercontent.com/73321593/205785412-62599cc6-e973-4ff7-99a4-42812a65f41e.png)
 
