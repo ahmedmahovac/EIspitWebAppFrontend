@@ -2,11 +2,27 @@
 
 This document contains brief overview of application functionalities.
 
+**General implementation details:**
+- Axios is used as HTTP client
+
 ## Registration
+
+- Having an account is intented for teachers only
+- Every registered user has teacher privileges
+ <br /> 
+ 
+- Formik and Yup are used for form validation
 
 ![Registracija](https://user-images.githubusercontent.com/73321593/205784240-5b2cf630-a10e-4b70-8c90-07d9a8d72aad.png)
 
 ## Login
+
+- Previously registered user has a login option
+<br /> 
+
+- **JWT** is used for user authentification
+- Formik and Yup are used for form validation
+
 
 ![prijavaFrontend](https://user-images.githubusercontent.com/73321593/205784066-5d2af3b3-1ecf-4e07-8371-db9230812e32.png)
 
