@@ -127,7 +127,9 @@ This document contains brief overview of application functionalities and some im
 
 ## Exam insight
 
--
+- The teacher can **open** / **close** exam insight for students
+- The student can access exam insight with unique key provided by his teacher
+- Exam insight consists of annotations and comments left by teachers (including images of that student's answers)
 
 ![pregledUvida (1)](https://user-images.githubusercontent.com/73321593/205787849-06d5bc47-9550-4935-b6fd-1adfd589a0ab.png)
 
