@@ -105,6 +105,17 @@ This document contains brief overview of application functionalities and some im
 
 ## Review of students' exam takes
 
+- The teacher can view every student's exam take
+- Answers are separated by questions
+- Every answer contains one or more images which are displayed in full resolution for readability purposes
+- The teacher can leave relevant comment (as annotation) on any part of image
+- *Undo option* for annotations is available
+- The teacher can leave general comment and mark down scored points for certain answer 
+<br/>
+
+- Images for single answer are retrieved every time user chooses question. Even though it is an expensive operation, reviewing single answer takes relatively long time to complete so retrieving images won't happen too often. 
+- 
+
 ![examResults](https://user-images.githubusercontent.com/73321593/205787094-deb7f0bd-4181-4f7b-bf77-c64806f5a0ad.png)
 
 ### Leaving annotations on student's answer
