@@ -119,10 +119,15 @@ This document contains brief overview of application functionalities and some im
 - The teacher can leave relevant comment (as annotation) on any part of image
 - *Undo option* for annotations is available
 - The teacher can leave general comment and mark down scored points for certain answer
+<br/>
+
+- Annotation is fully specified by geometrical position on image and typed comment. That information is stored in database. 
 
 ![pregledRjesenja (1)](https://user-images.githubusercontent.com/73321593/205787605-38aa42b7-f94c-4ed8-8150-822d6085baa2.png)
 
 ## Exam insight
+
+-
 
 ![pregledUvida (1)](https://user-images.githubusercontent.com/73321593/205787849-06d5bc47-9550-4935-b6fd-1adfd589a0ab.png)
 
