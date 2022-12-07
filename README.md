@@ -99,6 +99,8 @@ This document contains brief overview of application functionalities and some im
 - URL parameters contain all information needed to store images to the right place on backend server
 - **Multer** is again used for storing images
 - Images are locally stored as canvas objects (to support image rotation) 
+
+
 ![uploadRjesenjaMobitel (1)](https://user-images.githubusercontent.com/73321593/205786251-4298a3a3-52ef-45f7-89e8-caca6a05ae9b.png)
 
 ## Review of students' exam takes
